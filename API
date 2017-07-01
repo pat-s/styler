@@ -2,6 +2,7 @@
 
 ## Exported functions
 
+corrupt_file(path, extend = 0.3, flat = FALSE, transformers = get_transformers(flat = flat))
 get_transformers(flat, ...)
 get_transformers_flat(strict = TRUE, start_comments_with_one_space = FALSE)
 get_transformers_nested(strict = TRUE, indent_by = 2, start_comments_with_one_space = FALSE)
