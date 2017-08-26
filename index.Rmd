@@ -1,0 +1,50 @@
+# Introduction
+
+Welcome to the website of the Google Summer of Code 2017 project Non-invasive
+source code formatting, a source code formatter for the R language. 
+
+Over the course of three months, [Lorenz Walthert](https://lorenzwalthert.github.io/about/)
+mentored by [Kirill Müller](https://twitter.com/krlmlr) and 
+[Yihui Xie](https://yihui.name/en/about/), worked on the R package styler, which
+evolved from a proof of concept to a ready-for-production source code formatter.
+Because it is so exciting and pictures say more than 1000 words, we just want 
+to show you how it works.
+
+```{r, out.width = "'50px'100%'", echo = FALSE}
+knitr::include_graphics("https://raw.githubusercontent.com/lorenzwalthert/some_raw_data/master/styler_0.1.gif")
+```
+
+# Functionality
+
+The package can style text, single files, packages and entire R source trees. 
+In brief, styler works as follows:
+
+1. Create a abstract syntax tree (AST) from `utils::getParseData()` that
+   contains positional information of every token. We call
+   this a nested parse table.
+2. Apply transformer functions at each level of the nested parse table. In 
+   particular, modify information about the position of the token.
+3. Serialize the nested parse table, that is, extract the terminal tokens from 
+   the nested parse table and add spaces and line breaks between them as 
+   specified in the nested parse table. 
+
+A style guide applied to code is hence just a set of transformer functions 
+applied to each level of nesting. The main goal of this GSOC project was to 
+provide infrastructure that allows performing the above steps and implementing
+one particular style guide: 
+The [tidyverse style guide](http://style.tidyverse.org). However, since 
+technically speaking, the style guide is just a set of transformer functions,
+everybody can implement a style guide. There is a [vignette](articles/customizing-styler.html) that describes how
+to do that with an example.
+
+To find more about the contribution made to styler through Google Summer of 
+Code 2017, you can have a look at the corresponding [vignette](articles/gsoc_contrib.html).
+
+
+# Further Resources
+You can find out more about the package by checking out
+
+* the [source code](https://github.com/krlmlr/styler) at GitHub
+* the [description](https://summerofcode.withgoogle.com/projects/#5106168436359168) on the GSOC Website,
+* the [initial proposal](https://github.com/rstats-gsoc/gsoc2017/wiki/Noninvasive-source-code-formatting)
+in the GSOC Wiki.
