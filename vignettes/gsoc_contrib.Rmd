@@ -30,15 +30,21 @@ knitr::knit_engines$set(list(
 # styler in practice
 As a warm-up, we want to give a few examples of how styler styles code. It's
 possible to use different levels of invasiveness, as described in the help
-file for the style guide we implemented, which is the [tidyverse style guide](http://style.tidyverse.org/index.html). For example, we can limit 
-ourselves to styling just spacing information.
+file for only style guide implemented so far, which is the [tidyverse style guide](http://style.tidyverse.org/index.html). The style guide in use is 
+passed to the styling function (i.e `style_text()` and friends) via 
+`style` argument, which defaults to `tidyverse_style`.
+Apart from this argument, there are further customization options. For example, 
+we can limit ourselves to styling just spacing information, which we can 
+indicate with the `scope` argument.
 ```{r}
 library("styler")
 library("magrittr")
-style_text("a=3; 2", scope = "spaces") %>% cat()
+style_text("a=3; 2", scope = "spaces") %>% 
+  cat()
 ```
 
-Or, on the other extreme of the scale, styling spaces, indention, line breaks and tokens:
+Or, on the other extreme of the scale, styling spaces, indention, line breaks 
+and tokens:
 ```{r}
 style_text("a=3; 2", scope = "tokens") %>%
   cat(sep = "\n")
@@ -47,7 +53,7 @@ style_text("a=3; 2", scope = "tokens") %>%
 Another option that is helpful to determine the level of invasiveness is
 `strict`. If set to `TRUE`, spaces and line breaks after or before tokens are
 set to either zero or one. However, in some situations that might be undesirable,
-as the following example shows
+as the following example shows:
 ```{r}
 style_text(
   "data_frame(
@@ -57,6 +63,9 @@ style_text(
    )", strict = FALSE) %>%
   cat(sep = "\n")
 ```
+
+We prefer to keep the equal sign after "small", "medium" and large "alligned",
+so we set `strict = FALSE` to set spacing to *at least* one around `=`.
 
 I hope these examples showed you some of the options available in styler. Let
 us for now focus on a configuration with `strict = TRUE` and `scope = "tokens"` 

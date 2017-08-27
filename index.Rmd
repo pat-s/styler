@@ -14,9 +14,20 @@ to show you how it works.
 knitr::include_graphics("https://raw.githubusercontent.com/lorenzwalthert/some_raw_data/master/styler_0.1.gif")
 ```
 
+
 # Functionality
 
-The package can style text, single files, packages and entire R source trees. 
+The package can style text, single files, packages and entire R source trees
+with the following functions:
+
+* `style_text()` styles a character vector.
+* `style_file()` styles a single .R file.
+* `style_dir()` styles all .R files in a directory.
+* `style_pkg()` styles the source files of an R package.
+* An RStudio Addin that styles the active file .R file, the current package or
+  the highlighted code.
+
+# Mechanics
 In brief, styler works as follows:
 
 1. Create a abstract syntax tree (AST) from `utils::getParseData()` that
@@ -37,7 +48,7 @@ technically speaking, the style guide is just a set of transformer functions,
 everybody can implement a style guide. There is a [vignette](articles/customizing-styler.html) that describes how
 to do that with an example.
 
-To find more about the contribution made to styler through Google Summer of 
+To find out more about the contribution made to styler through Google Summer of 
 Code 2017, you can have a look at the corresponding [vignette](articles/gsoc_contrib.html).
 
 
