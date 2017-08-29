@@ -152,7 +152,7 @@ The list above is not comprehensive and covers only the large contributions.
 Always along with coding, documentation and tests were provided. With regard
 to the initial [proposal](https://docs.google.com/document/d/1V7ZWOVjEqM6-vc7WVxePUOHHc48HJwBKh8gAwIFALJ4/edit), we can say that steps one to four (increase documentation and 
 testing of code, perform all operations on with a nested structure, and fully 
-support the tidyverse style guide) were completed to a large extend and a few 
+support the tidyverse style guide) were completed to a large extent and a few 
 points under step five have been implemented too. The remaining points under 
 step five as well as the open issues of the repository indicate the direction of
 further development of the package.
@@ -163,7 +163,8 @@ for function calls, there are various cases uncovered and a corresponding
 repository.
 Also, it was not possible in this project to implement the rule that forces
 lines to be less than 80 characters long. We leave this to [lintr](https://github.com/jimhester/lintr). Known remaining problems are 
-well-documented on the [issue page]([issue](https://github.com/krlmlr/styler/issues) of the main repository on GitHub.
+well-documented on the [issue page](https://github.com/krlmlr/styler/issues) of
+the main repository on GitHub.
 It is nice to see that `styler` already got some traction from the community.
 The maintainer of the package [reprex](https://github.com/tidyverse/reprex) 
 plans to [add styler as a dependency](https://github.com/tidyverse/reprex/issues/94).

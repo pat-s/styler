@@ -1,7 +1,7 @@
 # Introduction
 
-Welcome to the website of the Google Summer of Code 2017 project Non-invasive
-source code formatting, a source code formatter for the R language. 
+Welcome to the website of the Google Summer of Code 2017 project **Non-invasive 
+source code formatting**, a source code formatter for the R language. 
 
 Over the course of three months, [Lorenz Walthert](https://lorenzwalthert.github.io/about/)
 mentored by [Kirill Müller](https://twitter.com/krlmlr) and 
@@ -48,14 +48,12 @@ technically speaking, the style guide is just a set of transformer functions,
 everybody can implement a style guide. There is a [vignette](articles/customizing-styler.html) that describes how
 to do that with an example.
 
-To find out more about the contribution made to styler through Google Summer of 
-Code 2017, you can have a look at the corresponding [vignette](articles/gsoc_contrib.html).
-
-
 # Further Resources
 You can find out more about the package by checking out
 
-* the [source code](https://github.com/krlmlr/styler) at GitHub
-* the [description](https://summerofcode.withgoogle.com/projects/#5106168436359168) on the GSOC Website,
+* a [vignette](articles/gsoc_contrib.html) that summarizes the contributions of
+  GSOC 2017 towards styler.
+* the [source code](https://github.com/krlmlr/styler) at GitHub.
+* the [description](https://summerofcode.withgoogle.com/projects/#5106168436359168) on the GSOC Website.
 * the [initial proposal](https://github.com/rstats-gsoc/gsoc2017/wiki/Noninvasive-source-code-formatting)
 in the GSOC Wiki.
