@@ -9,8 +9,9 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-This vignette aims to summarize the contributions made to styler through Google
+This vignette aims to summarize the contributions made to `styler` through Google
 Summer of Code 2017.
+
 ```{r, echo = FALSE}
 knitr::opts_chunk$set(echo = TRUE, comment = "")
 knitr::knit_engines$set(list(
@@ -28,14 +29,17 @@ knitr::knit_engines$set(list(
 ```
 
 # styler in practice
-As a warm-up, we want to give a few examples of how styler styles code. It's
-possible to use different levels of invasiveness, as described in the help
-file for only style guide implemented so far, which is the [tidyverse style guide](http://style.tidyverse.org/index.html). The style guide in use is 
-passed to the styling function (i.e `style_text()` and friends) via 
-`style` argument, which defaults to `tidyverse_style`.
-Apart from this argument, there are further customization options. For example, 
-we can limit ourselves to styling just spacing information, which we can 
-indicate with the `scope` argument.
+
+As a warm-up, we want to provide a few examples of how `styler` styles code. 
+It's possible to use different levels of 'invasiveness', as described in the 
+help file for the only style guide implemented so far, which is the 
+[tidyverse style guide](http://style.tidyverse.org/index.html). The style guide 
+in use is passed to the styling function (i.e `style_text()` and friends) via 
+the `style` argument, which defaults to `tidyverse_style`. In addition to this 
+argument, there are further customization options. For example, we can limit 
+ourselves to styling just spacing information by indicating this with the 
+`scope` argument:
+
 ```{r}
 library("styler")
 library("magrittr")
@@ -45,15 +49,17 @@ style_text("a=3; 2", scope = "spaces") %>%
 
 Or, on the other extreme of the scale, styling spaces, indention, line breaks 
 and tokens:
+
 ```{r}
 style_text("a=3; 2", scope = "tokens") %>%
   cat(sep = "\n")
 ```
 
-Another option that is helpful to determine the level of invasiveness is
-`strict`. If set to `TRUE`, spaces and line breaks after or before tokens are
-set to either zero or one. However, in some situations that might be undesirable,
+Another option that is helpful to determine the level of 'invasiveness' is
+`strict`. If set to `TRUE`, spaces and line breaks before or after tokens are
+set to either zero or one. However, in some situations this might be undesirable,
 as the following example shows:
+
 ```{r}
 style_text(
   "data_frame(
@@ -64,14 +70,15 @@ style_text(
   cat(sep = "\n")
 ```
 
-We prefer to keep the equal sign after "small", "medium" and large "alligned",
+We prefer to keep the equal sign after "small", "medium" and large aligned,
 so we set `strict = FALSE` to set spacing to *at least* one around `=`.
 
-I hope these examples showed you some of the options available in styler. Let
-us for now focus on a configuration with `strict = TRUE` and `scope = "tokens"` 
-and therefore only show code before and after styling. 
+Though simple, hopefully the above examples convey some of the flexibility of 
+the configuration options available in `styler`. Let us for now focus on a 
+configuration with `strict = TRUE` and `scope = "tokens"` and illustrate a few 
+more examples of code before and after styling.
 
-styler can distinguish unary operators and other math tokens:
+`styler` can identify and handle unary operators and other math tokens:
 
 ```{styler}
 1++1-1-1/2
@@ -79,6 +86,7 @@ styler can distinguish unary operators and other math tokens:
 
 It can also format complicated expressions that involve line breaking and 
 indention based on both brace expressions and operators:
+
 ```{styler}
 if (x >3) {stop("this is an error")} else {
 c(there_are_fairly_long,
@@ -88,7 +96,7 @@ c(there_are_fairly_long,
 ) }
 ```
 
-Lines are broken after `(` if a function calls spans over multiple lines:
+Lines are broken after `(` if a function call spans multiple lines:
 
 ```{styler}
 do_a_long_and_complicated_fun_cal("which", has, way, to, 
@@ -96,18 +104,19 @@ do_a_long_and_complicated_fun_cal("which", has, way, to,
                               )
 ```
 
-Styler converges `=` assignment, Single quotes if necessary, adds braces to
-function calls in pipes:
+`styler` replaces `=` with `<-` for assignment, handles single quotes within 
+strings if necessary, and adds braces to function calls in pipes:
+
 ```{styler}
 one= 'one string'
 two= "one string in a 'string'"
 a %>%
   b %>%
   c
-
 ```
 
-Function declarations are indented if multi-line
+Function declarations are indented if multi-line:
+
 ```{styler}
 my_fun <- function(x, 
 y, 
@@ -116,64 +125,68 @@ z) {
 }
 ```
 
-Styler can also deal with tidyeval syntax
+`styler` can also deal with tidyeval syntax:
+
 ```{styler}
 mtcars %>%
   group_by( ! !!my_vars)
 ```
 
 # Contributions to styler during GSOC
+
 ## High-level analysis
-The author, with help of his mentors,
+
+The author, with the help of his mentors,
 
 * opened over [60](https://github.com/krlmlr/styler/issues?utf8=✓&q=is%3Aopen%20is%3Aissue%20author%3Alorenzwalthert%20created%3A%3C2017-08-31%20%20created%3A%3E2017-06-01%20) issues and closed the majority of them with his own pull requests.
 * created more than [60](https://github.com/krlmlr/styler/pulls?q=is%3Apr+author%3Alorenzwalthert+created%3A%3C2017-08-31++created%3A%3E2017-06-01) pull requests to
-  master of which the vast majority was merged.
+  master of which the vast majority were merged.
 
 The activity during GSOC can be grouped as follows:
 
-- **Replicating the outcomes that were achieved with flat styling with nested styling.** 
-  Required implementation of the visitor as well as different 
+- **Replicating with nested styling the outcomes that were previously achieved with flat styling.** 
+  This required implementation of the visitor as well as a different 
   serialization method.
-- **Adding functionality that was only possible with the nested styling** such 
+- **Adding functionality that is only possible with the nested styling** such 
   as indention based on operators (`+`, `%>%` etc.), braces `{` and `(`. 
-  the use of raw indention, allowing for token-dependent re-indention.
-- **Infrastructure changes** such as serialized testing, improve performance, 
-  create mutli-line attribute, code re factoring. Partially
+  Also the use of raw indention, allowing for token-dependent re-indention.
+- **Infrastructure changes** such as serialized testing, improved performance, 
+  creation of mutli-line attributes, code re-factoring, & partially
   flattening out the nested parse table.
-- **Extending the functionality that was not there with the flat approach.** 
-  Examples include styling multiple expressions, token replacement (e.g. `<-` for 
-  `=`), line break rules (invasive and non-invasive), token insertion (`()` in 
-  function calls within pipes), RStudio Addins, styling of comments, styling of 
-  a single file, public API redesign, spacing around more operators (colons, 
+- **Extending with additional functionality that was not there with the flat approach.** 
+  Examples include styling multiple expressions, token replacement (e.g. `<-` 
+  for `=`), line break rules (invasive and non-invasive), token insertion (`()` 
+  in function calls within pipes), RStudio addins, styling of comments, styling 
+  of a single file, public API redesign, spacing around more operators (colons, 
   commas, infix operators, bang-bang).
 
 The list above is not comprehensive and covers only the large contributions.
-Always along with coding, documentation and tests were provided. With regard
-to the initial [proposal](https://docs.google.com/document/d/1V7ZWOVjEqM6-vc7WVxePUOHHc48HJwBKh8gAwIFALJ4/edit), we can say that steps one to four (increase documentation and 
-testing of code, perform all operations on with a nested structure, and fully 
-support the tidyverse style guide) were completed to a large extent and a few 
-points under step five have been implemented too. The remaining points under 
+Documentation and tests were provided as part of all code additions and changes. 
+With regard to the initial [proposal](https://docs.google.com/document/d/1V7ZWOVjEqM6-vc7WVxePUOHHc48HJwBKh8gAwIFALJ4/edit), we can say that steps one to four (increase documentation 
+and testing of code, perform all operations on with a nested structure, and 
+fully support the tidyverse style guide) were completed to a large extent and a 
+few points under step five have been implemented too. The remaining points under 
 step five as well as the open issues of the repository indicate the direction of
 further development of the package.
 
 The tidyverse style guide does not cover all formatting cases, so in particular 
-for function calls, there are various cases uncovered and a corresponding 
-[issue](https://github.com/krlmlr/styler/issues/125) was opened in the styler 
+for function calls, various cases were uncovered and a corresponding 
+[issue](https://github.com/krlmlr/styler/issues/125) was opened in the `styler` 
 repository.
 Also, it was not possible in this project to implement the rule that forces
-lines to be less than 80 characters long. We leave this to [lintr](https://github.com/jimhester/lintr). Known remaining problems are 
+lines to be less than 80 characters long. We leave this to 
+[lintr](https://github.com/jimhester/lintr). Known remaining problems are 
 well-documented on the [issue page](https://github.com/krlmlr/styler/issues) of
 the main repository on GitHub.
-It is nice to see that `styler` already got some traction from the community.
-The maintainer of the package [reprex](https://github.com/tidyverse/reprex) 
-plans to [add styler as a dependency](https://github.com/tidyverse/reprex/issues/94).
-As soon as one of its dependencies is accepted to CRAN, styler will also be 
-submitted.
+It is nice to see that `styler` is already getting some traction from the 
+community. The maintainer of the package 
+[reprex](https://github.com/tidyverse/reprex) plans to [add styler as a dependency](https://github.com/tidyverse/reprex/issues/94). As soon as one of 
+its dependencies is accepted to CRAN, `styler` will also be submitted.
 
 # Low-level analysis
 
 We can use the package `gitsum` to perform an analysis of the git repository.
+
 ```{r, message = FALSE}
 library("gitsum")
 library("tidyverse")
@@ -181,16 +194,17 @@ log <- git_log_detailed() %>%
   filter(date > as.Date("2017-06-01"), date < as.Date("2017-08-31"))
 ```
 
-We can see that the vast majority of the commits in this period comes from the 
+We see that the vast majority of the commits in this period come from the 
 student and a few from the main mentor.
+
 ```{r}
 log %>%
   group_by(author_name) %>%
   count()
 ```
 
-
 We can also look at how the number of lines in the different files evolved:
+
 ```{r}
 lines <- log %>%
   add_line_history()
@@ -209,7 +223,8 @@ ggplot(to_plot, aes(x = date, y = current_lines)) +
   facet_wrap(~changed_file, scales = "free_y")
 ```
 
-The total number of insertions and deletions by the author is
+The total number of insertions and deletions by the author is:
+
 ```{r}
 log %>%
   filter(author_name == "Lorenz Walthert") %>%
@@ -217,8 +232,9 @@ log %>%
   pull()
 ```
 
-Which still contains many insertions and deletions in some files that were
-generated as a bi-product, so let's focus on the code in the `R` directory.
+This contains many insertions and deletions in some files that were
+generated as a by-product of the code changes themselves, so let's focus on the 
+code in the `R` directory.
 
 ```{r}
 log %>%
@@ -228,7 +244,7 @@ log %>%
   pull()
 ```
 
-The core code with .R files only consists of 
+The core code with .R files only consists of:
 
 ```{r}
 log %>%
@@ -242,7 +258,12 @@ log %>%
 
 # Final remarks
 
-First and foremost, I want to thank my mentors, in particular Kirill Mueller, for his patience and time he put into that project. I really appreciate that and I think apart from the code submitted, I benefited so much from him in terms of how to code, what considerations to make and how to deal with pitfalls and unexpected problems along the way.
+First and foremost, I want to thank my mentors, in particular Kirill Müller, 
+for his patience and the time he put into the project. I really appreciate that 
+and I think apart from the code submitted, I benefitted so much from him in 
+terms of how to code, what considerations to make and how to deal with pitfalls 
+and unexpected problems along the way.
 
-In addition, I want to thank Google for their contributions to open source that made this project possible as well as all people involved with organizing GSOC from the R community. It was an amazing experience.
-
+In addition, I want to thank Google for their contributions to open source that 
+made this project possible as well as all people involved with organizing GSOC 
+from the R community. It was an amazing experience.
