@@ -161,11 +161,11 @@ The activity during GSOC can be grouped as follows:
   commas, infix operators, bang-bang).
 
 The list above is not comprehensive and covers only the large contributions.
-Documentation and tests were provided as part of all code additions and changes. 
-With regard to the initial [proposal](https://docs.google.com/document/d/1V7ZWOVjEqM6-vc7WVxePUOHHc48HJwBKh8gAwIFALJ4/edit), we can say that steps one to four (increase documentation 
-and testing of code, perform all operations on with a nested structure, and 
-fully support the tidyverse style guide) were completed to a large extent and a 
-few points under step five have been implemented too. The remaining points under 
+Always along with coding, documentation and tests were provided. With regard
+to the initial [proposal](https://docs.google.com/document/d/1V7ZWOVjEqM6-vc7WVxePUOHHc48HJwBKh8gAwIFALJ4/edit), we can say that steps one to four (increase documentation and 
+testing of code, perform all operations on with a nested structure, and fully 
+support the tidyverse style guide) were completed to a large extent and a few 
+points under step five have been implemented too. The remaining points under 
 step five as well as the open issues of the repository indicate the direction of
 further development of the package.
 
