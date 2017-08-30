@@ -190,7 +190,7 @@ We can use the package `gitsum` to perform an analysis of the git repository.
 ```{r, message = FALSE}
 library("gitsum")
 library("tidyverse")
-log <- git_log_detailed() %>%
+log <- parse_log_detailed() %>%
   filter(date > as.Date("2017-06-01"), date < as.Date("2017-08-31"))
 ```
 
