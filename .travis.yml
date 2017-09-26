@@ -21,7 +21,6 @@ after_script: R -q -e 'tic::after_script()'
 # DO NOT CHANGE THE CODE ABOVE
 
 # Custom parts:
-
 # Header
 language: r
 r:
