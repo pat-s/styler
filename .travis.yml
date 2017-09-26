@@ -22,7 +22,7 @@ after_script: R -q -e 'tic::after_script()'
 
 # Custom parts:
 # Header
-languae: r
+language: r
 #matrix: 3x Linux, 1x OS X
 matrix:
   include:
