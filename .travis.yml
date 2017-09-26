@@ -22,14 +22,16 @@ after_script: R -q -e 'tic::after_script()'
 
 # Custom parts:
 # Header
-language: r
-r:
-  - rel
-  - oldrel
-  - devel
-
-os: osx
-osx_image: xcode7.3
+#matrix: 3x Linux, 1x OS X
+matrix:
+  include:
+  - r: release
+  - r: oldrel
+  - r: devel
+  - os: osx
+    osx_image: xcode7.3
+    r: release
+    latex: false
 
 sudo: false
 dist: trusty
