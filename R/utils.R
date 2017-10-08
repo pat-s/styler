@@ -58,7 +58,7 @@ add_spaces <- function(n) {
 #' @param ... Arguments passed to [shell()] or [system()].
 #' @keywords internal
 calls_sys <- function(sys_call, ...) {
-  if (Sys.info()[1] == "Windows") {
+  if (.Platform$OS.type != "unix") {
     error <- shell(sys_call, ...)
   } else {
     error <- system(sys_call, ...)
