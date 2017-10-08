@@ -13,11 +13,15 @@ install:
 cache:
 - C:\RLibrary
 
-# Adapt as necessary starting from here
+build_script:
+  - travis-tool.sh install_deps
 
-#on_failure:
-#  - 7z a failure.zip *.Rcheck\*
-#  - appveyor PushArtifact failure.zip
+test_script:
+  - travis-tool.sh run_tests
+
+on_failure:
+  - 7z a failure.zip *.Rcheck\*
+  - appveyor PushArtifact failure.zip
 
 environment:
   USE_RTOOLS: true
