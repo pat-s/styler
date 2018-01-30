@@ -323,3 +323,7 @@ specify_math_token_spacing <-
 tidyverse_math_token_spacing <- function() {
   specify_math_token_spacing(one = c("'+'", "'-'", "'*'", "'/'", "'^'"))
 }
+
+
+tidyverse_with_comments_removed <- tidyverse_style()
+tidyverse_with_comments_removed$token$remove_comments <- remove_comments
