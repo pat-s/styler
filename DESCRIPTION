@@ -70,6 +70,7 @@ Collate:
     'rules-spacing.R'
     'serialize.R'
     'set-assert-args.R'
+    'style-guides-mlr.R'
     'style-guides.R'
     'styler.R'
     'testing.R'
