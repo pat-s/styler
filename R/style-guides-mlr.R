@@ -37,7 +37,6 @@ mlr_style <- function(scope = "tokens",
   space_manipulators <- if (scope >= "spaces") {
     lst(
       indent_braces = partial(indent_braces, indent_by = indent_by),
-      unindent_fun_dec,
       indent_op = partial(indent_op, indent_by = indent_by),
       indent_eq_sub = partial(indent_eq_sub, indent_by = indent_by),
       indent_without_paren = partial(indent_without_paren,
@@ -92,24 +91,13 @@ mlr_style <- function(scope = "tokens",
   line_break_manipulators <- if (scope >= "line_breaks") {
     lst(
       remove_line_break_before_curly_opening,
-      remove_line_break_before_round_closing_after_curly =
-        if (strict) remove_line_break_before_round_closing_after_curly,
+      add_line_break_before_round_closing_after_curly =
+        if (strict) add_line_break_before_round_closing_after_curly,
       remove_line_break_before_round_closing_fun_dec =
         if (strict) remove_line_break_before_round_closing_fun_dec,
       style_line_break_around_curly = partial(style_line_break_around_curly,
                                               strict
       ),
-      set_line_break_after_opening_if_call_is_multi_line = if (strict)
-        partial(
-          set_line_break_after_opening_if_call_is_multi_line,
-          except_token_after = "COMMENT",
-          except_text_before = c("switch", "ifelse", "if_else")
-        ),
-      set_line_break_before_closing_call = if (strict) {
-        partial(
-          set_line_break_before_closing_call, except_token_before = "COMMENT"
-        )
-      },
       remove_line_break_in_empty_fun_call,
       add_line_break_after_pipe
     )
@@ -117,7 +105,7 @@ mlr_style <- function(scope = "tokens",
 
   token_manipulators <- if (scope >= "tokens") {
     lst(
-      force_assignment_op,
+      force_assignment_eq,
       resolve_semicolon,
       add_brackets_in_pipe,
       remove_terminal_token_before_and_after,
@@ -127,11 +115,7 @@ mlr_style <- function(scope = "tokens",
   }
 
 
-  indention_modifier <-
-    lst(
-      update_indention_ref_fun_dec =
-        if (scope >= "indention") update_indention_ref_fun_dec
-    )
+  indention_modifier <- lst()
 
   create_style_guide(
     # transformer functions
@@ -144,4 +128,8 @@ mlr_style <- function(scope = "tokens",
     use_raw_indention = use_raw_indention,
     reindention       = reindention
   )
+}
+
+style_mlr <- function(text, ...) {
+  style_text(text, transformers = mlr_style(...))
 }
