@@ -1,0 +1,118 @@
+---
+title: "Untitled"
+author: "Lorenz Walthert"
+date: "6/13/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Rules
+```{r, comment = ""}
+library(magrittr)
+all <- readLines(here::here("vignettes/wiki"))
+txt <- gsub(pattern = "^[^1].*", "", x)
+txt[txt != ""] %>%
+  gsub("^1\\.\\s*\\*\\*", "", .) %>%
+  gsub("\\:*\\.*\\**\\:*$", "", .) %>%
+  paste0(1:length(.), ". ", .) %>%
+  writeLines(here::here("vignettes/wiki-light"))
+
+
+code_start <- all %>%
+  grepl("^\\s*```splus", .) %>%
+  which()
+
+code_stop <- all %>%
+  grepl("\\s*```$", .) %>%
+  which()
+good_code <- all %>%
+  grepl("\\s*Good\\:\\s*$", .) %>%
+  which()
+
+good_code_idx <- code_start %in% (good_code + 1L)
+code_good_start <- code_start[good_code_idx]
+code_good_stop <- code_stop[good_code_idx]
+purrr::map2(code_good_start, code_good_stop, ~all[rlang::seq2(.x + 1L, .y - 1L)]) %>%
+  map(~cat(.x, sep = "\n"))
+
+```
+
+Here are all elements of the style guide. We indicate if styler can apply
+the styling rule and if yes, whether it is already implemented.
+
+`# r paste(readLines(here::here("vignettes/wiki-light")), collapse = "\n")`
+
+1. Language (no)
+2. File names (no)
+3. Line length (not yet)
+4. Tabs (implemented)
+5. Indentation (implemented)
+6. Strings (implemented)
+7. Always use `TRUE` and `FALSE` instead of `T` and `F` (no)
+8. Always write integers as `1L` instead of `1` (no)
+9. Write `1:3` instead of `c(1:3)` (no)
+10. Assignment operator (implemented)
+11. Spacing around operators and commas (implemented, except 1:(k+1))
+12. Curly braces (implemented)
+13. `if`, `for`, `while` statements (implemented)
+14. No extra whitespaces for parenthesis (implemented)
+15. Return statement (no)
+16. One command per line and semicolon (implemented)
+17. Use whitespace lines to structure your code (no)
+18. Comments (no)
+19. Function names (no)
+20. Variable and function argument names (no)
+21. Documenting and argument checks (no)
+22. Code distribution in files (no)
+23. Function length and abstraction (no)
+24. R scripts: `library` / `require` and `source` statements (no)
+25. Local helper functions defined in a parent function (no)
+26. Nearly never use global variables (no)
+27. FIXMEs (no)
+28. Object-oriented programming (no)
+29. Don't repeat yourself (no)
+30. Exceptions to the rules (no)
+31. The existing code base always has preference (no)
+
+
+## To resolve
+
+```{r, eval = FALSE}
+# styler turns
+if (cond) 
+  do_x()
+
+# into 
+if (cond) {
+  do_x()
+}
+```
+
+One-line expression remains the same.
+```{r}
+if (cond) do_x()
+```
+
+
+* R/ClusterTask.R: seems right
+* R/CostsensTaks.R: Seems right
+* R/DownSampleWrapper.R: Indent comments.
+* R/FeatSelControlGA.R: no curly braces added if all on one line.
+* RFeatSelWrapper.R: Add a space at the beginning of comment.
+* R/Measure_make_cost.R: Add a space at the beginning of comment.
+* R/MultilabelClassifierChainsWrapper.R: Add a space at the beginning of comment.
+* R/MultilabelNestedStackingWrapper.R: Add a space at the beginning of comment.
+* R/MulitlabelStackingWrapper.R: Add a space at the beginning of comment.
+* R/OptControl.R: Removing empty line after function declaration header.
+* R/OptWrapper.R: Removing empty line after function declaration header.
+* R/OverUndersampleWrapper.R: Indent comments.
+* R/Prediction_operators.R: Space after comment
+* R/PreprocWrapperCaret.R: Probably unwanted alignment.
+* R/Learner_classif_PRF.R: Function call re-indention.
+* R/RLearner_classif_bartMachine.R: Space after comment.
+* R/Learner_classif_blackboost.R: Space after comment.
+* R/RLearner_classif_dbnDNN.R: Is it part of the style guide to always use two
+  spaces before ...?
