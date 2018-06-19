@@ -1,0 +1,479 @@
+**Version 1.0, written by Bernd Bischl**
+
+Every programmer knows that code is read more than it is written. Not having a consistent coding style
+is error prone and annoying for the reader. It also looks very unprofessional.
+Of course, such a style convention should have been defined on the language level many, many years ago
+by R core. Unfortunately, it was not. So now every group or single package developer has their
+own style - or none at all.
+
+Good alternatives are
+* [Google's R Style Guide](http://google-styleguide.googlecode.com/svn/trunk/Rguide.xml)
+* [R Style Guide by Hadley Wickham](http://adv-r.had.co.nz/Style.html) from his in-progress book **"Advanced R development"** and
+* the [R Coding Conventions](http://aroma-project.org/developers/RCC) by Henrik Bengtsson.
+
+**FIXMEs:**
+- check the above sites for nice stuff I forgot
+
+In some cases I have shamelessly stolen from the guides above, and in quite a few places this
+guide deviates.
+
+A few side remarks: Nobody really enjoys reading such standard definitions and I can easily imagine
+more enjoyable things than writing them. And while for some of the following rules arguments
+could (maybe) be made, why they are good rules, others are based on a subjective feeling of
+aesthetics or simply what I became accustomed to over the years. If people start arguing religiously
+over where to place curly braces, better go away and talk to less weird guys.
+In summary, I am not proposing that this is the best set of rules that exists.
+What is important is that you follow SOME style set. What follows is our personal choice.
+Stick to it if you collaborate with us on our packages.
+
+
+1. **Language:**
+   Code and documentation is always written in English, never in German, French or whatever.
+   The same holds for file and directory names.
+
+1. **File names:**
+   File names must always be meaningful. Don't make them too short, don't make them too long.
+   No special characters or whitespaces occur in them. Stick to [a-z], [A-Z], [0-9] [_,-] nearly always.
+   Source files end in .R not .r or .txt or something else. R Data files end in .RData, not .rdata or
+   .rda or something else.
+
+1. **Line length:**
+   Maximum line length is somewhere between 80 and 100 characters.
+
+1. **Tabs:**
+   Tabs are converted to spaces and tab width is 2. Configure your editor of choice for this.
+
+1. **Indentation:**
+   Always indent one level after opening a curly brace and remove one level after closing one.
+   Indentation width is one tab width, which is 2 spaces. When a line break occurs inside parentheses,
+   do not align the wrapped line with the first character inside the parenthesis, but also indent 2 spaces.
+
+   Good:
+   ```splus
+   for (i in 1:3) {
+     y = y + i
+   }
+
+   doThatThing(arg1 = "a_long_string_is_passed", arg2 = "a_long_string_is_passed_here_too",
+     arg3 = "another_long_string")
+
+   ```
+
+   Bad:
+   ```splus
+
+   for (i in 1:3) {
+   y = y + i
+   print("foo")
+   }
+
+   doThatThing(arg1 = "a_long_string_is_passed", arg2 = "a_long_string_is_passed_here_too",
+               arg3 = "another_long_string")
+
+   ```
+
+1. **Strings**:
+   Define strings with double quotes, so `"hello"` instead of `'hello'`.
+
+1. **Always use `TRUE` and `FALSE` instead of `T` and `F`.**
+
+1. **Always write integers as `1L` instead of `1`:**
+   Because `1` actually means `1.0`, a numeric, in R.
+
+1. **Write `1:3` instead of `c(1:3)`:**
+   `1:3` is already an (integer) vector.
+
+1. **Assignment operator:**
+   Use `=` instead of `<-` for assignments.
+
+  Good:
+   ```splus
+   a = 3
+   ```
+
+   Bad:
+   ```splus
+   a <- 3
+   ```
+
+  Other people have the same preference and you can [read arguments in favor and against](http://csgillespie.wordpress.com/2010/11/16/assignment-operators-in-r-vs) it.
+
+1. **Spacing around operators and commas:**
+   Place one space on each side of most binary operators (`=`, `==`, `+`, `-`, etc).
+   This also applies when passing named arguments to functions, e.g., `f(foo = 5)`.
+   No space before a comma, one space after a comma.
+
+   Good:
+   ```splus
+   a = 3
+
+   f(a, b)
+
+   f(a + b)
+
+   f(arg = "value")
+
+   if (a == b) {
+     ...
+   }
+   ```
+
+   Bad:
+   ```splus
+   a=3
+
+   a =3
+
+   f(a,b)
+
+   f(a , b)
+
+   f(a+b)
+
+   if (a==b) {
+     ...
+   }
+   ```
+
+   Some exceptions which are better readable without spaces:
+   ```splus
+   1:n
+
+   2^k
+
+   x[i+1, j-1]
+
+   1:(i+1)
+   ```
+
+1. **Curly braces:**
+   The opening curly brace goes on the same line as the respective syntactic element it belongs to and
+   never on its own line. Always have one space before the opening brace `{`.
+   The closing curly brace `}` goes on its own line, except if it occurs before an `else` statement,
+   see the following point on `if` statements.
+
+   Good:
+   ```splus
+   for (i in 1:3) {
+     y = y + i
+   }
+   ```
+
+   Bad:
+   ```splus
+   for (i in 1:3) {y = y + i}
+
+   for (i in 1:3){
+     y = y + i
+   }
+
+   for (i in 1:3)
+   {
+     y = y + i
+   }
+   ```
+
+1. **`if`, `for`, `while` statements:**
+   Put a single space in between `if`, `while`, `repeat` and
+   its following, opening parenthesis (.
+   Do not write `if (ok == TRUE)` if `ok` already is a boolean value, write `if (ok)`.
+   If the body of the statement consists of only one line, the language allows us to omit the curly braces.
+   This can be a good thing if it keeps the code together
+   (less scrolling is better reading and understanding), but you should only use this when the
+   code structure is very simple, not with, e.g., complicated, nested `if` statements. If you use it,
+   always put the single line body on a separate line and indent it.
+   If in doubt, always use the braces. If you use curly braces with `else`, the curly brace before the
+   `else` goes on the same line as the `else`.
+
+   Good:
+   ```splus
+   if (condition) {
+     ...
+   }
+
+   if (condition) {
+     ...
+   } else {
+     ...
+   }
+
+   # in rare cases OK
+   if (condition)
+     x = 1
+
+   for (i in 1:10) {
+     ...
+   }
+
+   while (not.done) {
+     ...
+   }
+   ```
+
+   Bad:
+   ```splus
+   if(condition) {
+     ...
+   }
+
+   if (condition) {
+     ...
+   }
+   else {
+     ...
+   }
+
+   ```
+
+1. **No extra whitespaces for parenthesis:**
+   Do not put whitespaces before or after the parenthesis `(` and `)` when defining or calling functions.
+
+   Good:
+   ```splus
+   doIt(1, 4)
+   ```
+
+   Bad:
+   ```splus
+   doIt( 1, 4 )
+   doIt (1, 4)
+   ```
+
+1. **Return statement:**
+   Try to explicitly use the `return` statement and do not rely on R's convention to return the value
+   of the last evaluated expression of the called function, especially if your function is
+   longer and you `return` in multiple places.
+   Deviate if your function is shorter, e.g., for short anonymous functions.
+   The basic distinction is whether you have used an imperative or a functional coding style
+   for the respective function. R allows both and I mix both styles heavily.
+   If your function is more like a procedure, i.e., it has no meaningful return value,
+   return `invisible(NULL)`.
+
+1. **One command per line and semicolon**:
+   Put every statement / command in its own line.
+   Do not put a semicolon at the end of a statement. This is R not C.
+
+   Bad:
+   ```splus
+   x = 1;
+   x = 1; y = 2; z = 3
+   ```
+
+1. **Use whitespace lines to structure your code:**
+   Do not put arbitrary empty lines in your code, but instead use them sparsely to structure your
+   code into "blocks of actions" that make sense. Usually, you want to put at least a short comment
+   line before such a block that explains its contents, see next point.
+   This structuring guides the reader and allows him to catch his breath.
+
+1. **Comments:**
+   Use a single `#` (not two `##`), then one space, on the same level of indentation as
+   the code you comment, to start a comment line.
+   Usually, you should not put a comment on the same line as the code you comment.
+   Combine meaningful identifier names and well written code, which is as self-documenting as possible,
+   with short, precise lines of comments. Complicated stuff needs lengthier comments.
+   No or too few comments are bad, but too verbose or unnecessary comments are also (less) bad.
+   Usually, it is good style to prefix smaller "blocks of code", e.g., half a page of a `for` loop,
+   where you "do a certain thing" with 1-2 comment lines that explain what is going to happen now.
+
+1. **Function names:**
+   Functions are named in "verb style", written in camel case and the name begins
+   with a lowercase letter. Names have to be meaningful and are important, hence,
+   invest some time to find good, expressive names.
+   Don't make them too short, don't make them too long. In case of doubt, choose the longer,
+   more expressive name, but don't overdo it.
+
+   Good:
+   ```splus
+   doThatThing()
+   ```
+   Bad:
+   ```splus
+   doThatThingYouKnowWhatIMeanItIsReallyCool()
+   dtt()
+   do.that.thing()
+   dothatthing()
+   do_that_thing()
+   ```
+
+1. **Variable and function argument names:**
+   Use lowercase letters and separate words with a dot. This allows to visually discriminate
+   functions from arguments / variables.
+   (Yes, in R functions are first-class objects. We can live with that and this won't
+   hurt or confuse us in 99.999% of cases. If you did not understand this subtle point, do not worry.)
+   Names have to be meaningful, they are important, hence, invest some time to find good, expressive names.
+   Don't make them too short, don't make them too long. Here is a rule of thumb to decide whether
+   a name should be shorter or longer: Is the variable used in various places of a long and complicated
+   function after it was introduced? Make the name longer and very precise. Is the variable used in a
+   local, very restricted context only and its meaning pretty clear from the context?
+   A shorter name is probably not only OK, but even better.
+
+   Good:
+   ```splus
+   multiply = function(a, b) {
+     ...
+   }
+
+   writeLinesToFile = function(file.path, lines, show.info = TRUE) {
+     ...
+   }
+
+   for (i in 1:10) {
+     vec[i] = 1
+   }
+   ```
+
+   Bad:
+   ```splus
+   writeLinesToFile = function(filePath, lines, showInfo = TRUE) {
+     ...
+   }
+
+   # name too long, simply "i" would be OK
+   for (the.iterator in 1:10) {
+     vec[the.iterator] = 1
+   }
+   ```
+
+1. **Documenting and argument checks**:
+   Use [roxygen2](http://cran.r-project.org/web/packages/roxygen2/index.html) to document your functions. A good starting point to get familiar with documenting R code is the documentation section of the [chapter about R package development](http://adv-r.had.co.nz/#package-development) from Hadleys book.
+
+   For example take a glance at the documentation of the [clipString function](https://github.com/berndbischl/BBmisc/blob/master/R/clipString.R) in the BBmisc package.
+
+   See how we also document the argument and return types in a formal fashion? Always do that.
+   Yes, R is a dynamically typed language but in more than 90% of my function definitions
+   I have a certain type in mind for my function arguments. This holds true for many R packages, but very
+   often this information is not easily available from the help page. Also mention the default value,
+   even if it is visible in the usage line.
+
+   ```splus
+
+   A scalar integer parameter
+   #' @param n (`integer(1)`)\cr
+   #'   My argument.
+   #'   Default is 1.
+
+   An integer vector of arbitrary size
+   #' @param x ([integer])\cr
+   #'   The vector.
+
+   An S3 object of a class you defined in the same package.
+   #' @param obj ([MyS3Class}])\cr
+   #'   A nice object.
+
+   Data type for returned object.
+   #' @return (`integer(1)`)\cr
+   #'   Returns the length of the vector.
+
+   ```
+
+   You should also check the validity of the input arguments of your function. This provides
+   useful feedback to client users when they make mistakes and can be even helpful for yourself and
+   make bug detection easier. In order to make your life easier in that regard,
+   [BBmisc](https://github.com/berndbischl/BBmisc/) provides the functions
+   [checkArg](http://berndbischl.github.io/BBmisc/man/checkArg.html) and
+   [checkListElementClass](http://berndbischl.github.io/BBmisc/man/checkListElementClass.html).
+
+   Here is the relevant section from
+   [clipString](https://github.com/berndbischl/BBmisc/blob/master/R/clipString.R)
+   that performs these checks:
+
+   ```splus
+   clipString = function(x, len, tail="...") {
+     checkArg(x, "character", na.ok=TRUE)
+     len = convertInteger(len)
+     checkArg(tail, "character", len=1L, na.ok=FALSE)
+     checkArg(len, "integer", len=1L, na.ok=FALSE, lower=nchar(tail))
+     ...
+   }
+   ```
+
+   Note that these checks come with a certain (small) overhead, so you should maybe not perform them in
+   fast running functions that get called a few thousand times in client code. We are currently
+   writing [a new, C-based arg-check system](https://github.com/mllg/checkmate) which will not have this overhead problem anymore.
+
+1. **Code distribution in files**:
+   Try to put one single function definition into one .R file. Name the file like the function.
+   If you have some very short helper functions you can deviate from this.
+
+1. **Function length and abstraction**:
+   Good functions very often cover 1 to 3 screen pages.
+   Of course, some complicated stuff sometimes is longer.
+   If that happens, think about introducing another level of indirection, e.g., more functions
+   or data types. Maybe this is a good time for refactoring?
+   If your function or source file covers 5000 lines of code
+   (Have seen those. Not just once.)
+   _you are doing it wrong_ - and your code will not be maintainable.
+
+1. **R scripts: `library` / `require` and `source` statements.**
+   Always put these into a "header" block at the beginning of your scripts. First the
+   `library` statements, then the `source` statements. NEVER use absolute file paths
+   in your source statements. Define a project-related working directory
+   (usually either the top level directory or something like a "src" subdirectory of your project)
+   that all paths refer to and use relative paths.
+   If that does not work for you for some reason, define ONE path variable at the beginning of your
+   script that can easily be changed in one place and use it with `file.path`.
+   Note that this option is still worse than the one described before.
+
+   Good:
+   ```splus
+   library(MASS)
+   library(rpart)
+
+   source("foo.R")
+   source("bar.R")
+   source("lib/helpers.R")
+   ```
+
+   Somewhat worse alternative:
+   ```splus
+   source.path = "/home/bischl/myproject/src"
+   source(file.path(source.path, "foo.R"))
+   source(file.path(source.path, "bar.R"))
+   source(file.path(source.path, "lib", "helpers.R"))
+   ```
+
+   Bad:
+   ```splus
+   source("C:/Documents and Settings/Joe/Desktop/myproject/foo.R")
+
+   x = 1
+   doIt(x)
+
+   library(rpart)
+
+   source("C:/Documents and Settings/Joe/Desktop/myproject/bar.R")
+
+   # and so on ad nauseam, we have all seen this
+   ```
+
+   Some people prefer `library("MASS")` and `require("MASS")` to `library(MASS)`, but I don't care and
+   usually use the latter.
+
+1. **Local helper functions defined in a parent function**:
+   Can be OK, if the inner function is only used in this context and pretty simple. Otherwise try to avoid.
+
+1. **Nearly never use global variables.**
+
+1. **FIXMEs**:
+   If you discover something bad or suspicious, and it is not a bug which you enter into the issue tracker,
+   comment the problem and add `# FIXME:`. Do not use `TODO` instead.
+   Be precise in the description and err on the side of verbosity, otherwise other people
+   (possibly including yourself) will not understand what you meant when they read this in the future.
+   If you use a proper editor, it will help you searching through these issues later.
+
+1. **Object-oriented programming:**
+   Use S3 instead of S4. S4 results in code bloat without real benefits. Yes, S3 sucks too,
+   but less so. No final verdict on reference classes. Whether an OO-style of programming makes sense for
+   your R project cannot be answered in general. If you need to define your own abstract data types and
+   respective operations on them, it likely does make sense to use OO.
+
+1. **Don't repeat yourself:**
+   Copy-paste code is always an indicator that something is wrong.
+
+1. **Exceptions to the rules:**
+   Intelligent and experienced people stick to their style definition 99% of the time and
+   are able to recognize the 1% of cases where deviations are not only OK, but better.
+   In case of doubt, stick to the law.
+
+1. **The existing code base always has preference:**
+   If the style of an already existing project differs from the above, stick to its style.
