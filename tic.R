@@ -1,7 +1,6 @@
-add_package_checks(notes_are_errors = getRversion() >= "3.2") %>%
-  add_code_step(install.packages("remotes")) %>%
-  add_code_step(remotes::install_github("r-lib/revdepcheck")) %>%
-  add_code_step(revdepcheck::revdep_check())
+add_package_checks(notes_are_errors = getRversion() >= "3.2")
+
+
 
 if (Sys.getenv("id_rsa") != "" && ci()$get_branch() == "master" && Sys.getenv("BUILD_PKGDOWN") != "") {
   # pkgdown documentation can be built optionally. Other example criteria:
@@ -19,4 +18,9 @@ if (Sys.getenv("id_rsa") != "" && ci()$get_branch() == "master" && Sys.getenv("B
     add_step(step_build_pkgdown()) %>%
     add_code_step(writeLines("styler.r-lib.org", "docs/CNAME")) %>%
     add_step(step_push_deploy("docs", "gh-pages"))
+} else {
+  get_stage("deploy") %>%
+    add_code_step(install.packages("remotes")) %>%
+    add_code_step(remotes::install_github("r-lib/revdepcheck")) %>%
+    add_code_step(revdepcheck::revdep_check())
 }
