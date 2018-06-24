@@ -1,7 +1,4 @@
-add_package_checks(notes_are_errors = getRversion() >= "3.2")
-
-
-
+# add_package_checks(notes_are_errors = getRversion() >= "3.2")
 if (Sys.getenv("id_rsa") != "" && ci()$get_branch() == "master" && Sys.getenv("BUILD_PKGDOWN") != "") {
   # pkgdown documentation can be built optionally. Other example criteria:
   # - `inherits(ci(), "TravisCI")`: Only for Travis CI
@@ -21,5 +18,6 @@ if (Sys.getenv("id_rsa") != "" && ci()$get_branch() == "master" && Sys.getenv("B
 } else {
   get_stage("deploy") %>%
     add_code_step(revdepcheck::revdep_check(num_workers = parallel::detectCores())) %>%
-    add_step(step_push_deploy("revdep", "revdep", commit_paths = "problems.md"))
+    add_code_step(usethis::use_revdep()) %>%
+    add_step(step_push_deploy("revdep", "revdep"))
 }
