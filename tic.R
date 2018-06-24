@@ -1,5 +1,6 @@
 add_package_checks(notes_are_errors = getRversion() >= "3.2") %>%
-  add_code_step(install.packages(revdepcheck)) %>%
+  add_code_step(install.packages("remotes")) %>%
+  add_code_step(remotes::install_github("r-lib/revdepcheck")) %>%
   add_code_step(revdepcheck::revdep_check())
 
 if (Sys.getenv("id_rsa") != "" && ci()$get_branch() == "master" && Sys.getenv("BUILD_PKGDOWN") != "") {
