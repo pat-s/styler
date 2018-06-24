@@ -20,7 +20,5 @@ if (Sys.getenv("id_rsa") != "" && ci()$get_branch() == "master" && Sys.getenv("B
     add_step(step_push_deploy("docs", "gh-pages"))
 } else {
   get_stage("deploy") %>%
-    add_code_step(install.packages("remotes")) %>%
-    add_code_step(remotes::install_github("r-lib/revdepcheck")) %>%
     add_code_step(revdepcheck::revdep_check())
 }
