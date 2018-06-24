@@ -1,4 +1,5 @@
-# add_package_checks(notes_are_errors = getRversion() >= "3.2")
+add_package_checks(notes_are_errors = getRversion() >= "3.2")
+
 if (Sys.getenv("id_rsa") != "" && ci()$get_branch() == "master" && Sys.getenv("BUILD_PKGDOWN") != "") {
   # pkgdown documentation can be built optionally. Other example criteria:
   # - `inherits(ci(), "TravisCI")`: Only for Travis CI
