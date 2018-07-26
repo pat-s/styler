@@ -123,7 +123,7 @@ make_transformer <- function(transformers, include_roxygen_examples) {
 parse_transform_serialize_roxygen <- function(text, transformers) {
   roxygen_seqs <- identify_start_to_stop_of_roxygen_examples_from_text(text)
   if (length(roxygen_seqs) < 1L) return(text)
-  split_segments <- split_roxygen_segments(text, unlist(roxygen_seqs))
+  split_segments <- split_roxygen_segments(text, roxygen_seqs)
   map_at(split_segments$separated, split_segments$selectors,
     style_roxygen_code_example,
     transformers = transformers
@@ -144,17 +144,41 @@ parse_transform_serialize_roxygen <- function(text, transformers) {
 #'   sections. This list is named `separated`.
 #' * An integer vector with the indices that correspond to roxygen code
 #'   examples in `separated`.
-#' @importFrom rlang seq2
 #' @keywords internal
 split_roxygen_segments <- function(text, roxygen_examples) {
   if (is.null(roxygen_examples)) return(lst(separated = list(text), selectors = NULL))
-  all_lines <- seq2(1L, length(text))
-  active_segemnt <- as.integer(all_lines %in% roxygen_examples)
-  segment_id <- cumsum(abs(c(0L, diff(active_segemnt)))) + 1L
+  segment_id <- derive_segment_id(text, roxygen_examples)
   separated <- split(text, factor(segment_id))
-  restyle_selector <- ifelse(roxygen_examples[1] == 1L, odd_index, even_index)
+  restyle_selector <- ifelse(unlist(roxygen_examples)[1] == 1L, odd_index, even_index)
 
   lst(separated, selectors = restyle_selector(separated))
+}
+
+#' Derive the roxygen segment id
+#'
+#' This is necessary because technically, two `@examples` segments can follow
+#' after each other, and they need to be treated as independent segments.
+#' @inheritParams split_roxygen_segments
+#' @importFrom purrr flatten_dbl map2
+#' @keywords internal
+derive_segment_id <- function(text, roxygen_examples) {
+  all_lines <- seq2(1L, length(text))
+  active_segment <- as.integer(all_lines %in% unlist(roxygen_examples))
+  segment_id <- cumsum(abs(c(0L, diff(active_segment)))) + 1L
+  if (is.list(roxygen_examples)) {
+    breakpoints <- map2(lag(roxygen_examples, default = 0), roxygen_examples,
+      function(x, y) {
+        if (last(x) + 1L == y[1]) {
+          y[1]
+        }
+      }
+    ) %>% flatten_dbl()
+    add_breaks <- rep(0, length(segment_id))
+    add_breaks[breakpoints] <- 1
+    segment_id + cumsum(add_breaks)
+  } else {
+    segment_id
+  }
 }
 
 #' Parse, transform and serialize text
