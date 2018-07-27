@@ -38,7 +38,7 @@ style_roxygen_code_example <- function(example, transformers) {
 style_roxygen_code_example_segment <- function(one_dont, transformers) {
   if (length(one_dont) < 1L) return(character())
   dont_seqs <- find_dont_seqs(one_dont)
-  split_segments <- split_roxygen_segments(one_dont, unlist(dont_seqs))
+  split_segments <- split_roxygen_segments(one_dont, unlist(dont_seqs), "alternating")
   is_dont <-
     seq2(1L, length(split_segments$separated)) %in% split_segments$selectors
 

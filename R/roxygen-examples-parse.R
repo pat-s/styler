@@ -15,6 +15,13 @@ parse_roxygen <- function(roxygen) {
     as.character()
 }
 
+parse_roxygen_collapse <- function(roxygen) {
+  parse_roxygen(roxygen) %>%
+    paste0(collapse = "") %>%
+    strsplit("\n", fixed = TRUE) %>%
+    unlist()
+}
+
 #' Fix parsing bugs
 #'
 #' @param raw Raw code to post-process.
@@ -32,11 +39,11 @@ post_parse_roxygen <- function(raw) {
   special <- substr(raw, 1, 1) == "%"
   len <- nchar(raw)
   newline_after <- substr(raw, len, len) == "\n"
-  # must_instert_linebreak_after <- which(
-  #   (special & !newline_after) |
-  #     (raw == "}" & (!(lead(substr(raw, 1, 1)) %in% c(",", "}", ")"))))
-  # )
-  must_instert_linebreak_after <- integer(0)
+   must_instert_linebreak_after <- which(
+     (special & !newline_after) |
+       (raw == "}" & (!(lead(substr(raw, 1, 1)) %in% c(",", "}", ")"))))
+  )
+  #must_instert_linebreak_after <- integer(0)
   split <- reduce(must_instert_linebreak_after +
                     seq(0L, length(must_instert_linebreak_after) - 1L),
                   append, values = "\n", .init = raw

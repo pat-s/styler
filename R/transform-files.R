@@ -123,7 +123,8 @@ make_transformer <- function(transformers, include_roxygen_examples) {
 parse_transform_serialize_roxygen <- function(text, transformers) {
   roxygen_seqs <- identify_start_to_stop_of_roxygen_examples_from_text(text)
   if (length(roxygen_seqs) < 1L) return(text)
-  split_segments <- split_roxygen_segments(text, roxygen_seqs)
+  split_segments <- split_roxygen_segments(text, roxygen_seqs,
+    selector_method = "keyword-based")
   map_at(split_segments$separated, split_segments$selectors,
     style_roxygen_code_example,
     transformers = transformers
@@ -145,14 +146,32 @@ parse_transform_serialize_roxygen <- function(text, transformers) {
 #' * An integer vector with the indices that correspond to roxygen code
 #'   examples in `separated`.
 #' @keywords internal
-split_roxygen_segments <- function(text, roxygen_examples) {
+split_roxygen_segments <- function(text, roxygen_examples, selector_method) {
   if (is.null(roxygen_examples)) return(lst(separated = list(text), selectors = NULL))
   segment_id <- derive_segment_id(text, roxygen_examples)
   separated <- split(text, factor(segment_id))
-  restyle_selector <- ifelse(unlist(roxygen_examples)[1] == 1L, odd_index, even_index)
-
-  lst(separated, selectors = restyle_selector(separated))
+  selectors <- derive_selector(roxygen_examples,
+    separated,
+    selector_method,
+  )
+  lst(separated, selectors = selectors)
 }
+
+derive_selector <- function(roxygen_examples,
+                            separated,
+                            selector_method,
+                            regex = "\\s*'\\s*@examples\\s*") {
+  if (selector_method == "alternating") {
+    restyle_selector <- ifelse(unlist(roxygen_examples)[1] == 1L, odd_index, even_index)
+    restyle_selector(separated)
+  } else if (selector_method == "keyword-based") {
+    map_lgl(separated, ~grepl(regex, .x[1])) %>%
+      which()
+  }
+}
+
+
+
 
 #' Derive the roxygen segment id
 #'
