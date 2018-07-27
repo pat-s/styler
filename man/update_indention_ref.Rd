@@ -46,7 +46,7 @@ call(call(1,
 \dontrun{
 a <- function(x,
               y) {
-x + y
+  x + y
 }
 }
 }
