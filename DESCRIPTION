@@ -70,3 +70,5 @@ Collate:
     'vertical.R'
     'visit.R'
     'zzz.R'
+Remotes:  
+    lorenzwalthert/stylermd

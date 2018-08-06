@@ -16,7 +16,7 @@ transform_code <- function(path, fun, verbose = FALSE, ...) {
       verbose = verbose
     )
   } else {
-    stop(path, " is not an R or Rmd file")
+    stylermd::tidy_file(path)
   }
 }
 
@@ -33,7 +33,7 @@ transform_code <- function(path, fun, verbose = FALSE, ...) {
 transform_rmd <- function(lines, transformer_fun) {
   chunks <- separate_chunks(lines)
   chunks$r_chunks <- map(chunks$r_chunks, transformer_fun)
-
+  chunks$text_chunks <- map(chunks$text_chunks, stylermd::tidy_text)
   map2(chunks$text_chunks, c(chunks$r_chunks, list(character(0))), c) %>%
     flatten_chr()
 }
