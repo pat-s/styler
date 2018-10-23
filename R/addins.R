@@ -25,7 +25,9 @@ style_active_file <- function() {
   )
   context <- get_rstudio_context()
   if (is_rmd_file(context$path)) {
-    out <- transform_rmd(context$contents, transformer)
+    out <- transform_mixed(context$contents, transformer, filetype = "Rmd")
+  } else if (is_rnw_file(context$path)) {
+    out <- transform_mixed(context$contents, transformer, filetype = "Rnw")
   } else if (is_plain_r_file(context$path) | is_unsaved_file(context$path)) {
     out <- try_transform_as_r_file(context, transformer)
   } else {
