@@ -38,9 +38,9 @@ transform_code <- function(path, fun, verbose = FALSE, ...) {
 transform_mixed <- function(lines, transformer_fun, filetype) {
   chunks <- separate_chunks(lines, filetype)
   chunks$r_chunks <- map(chunks$r_chunks, transformer_fun)
-  chunks$text_chunks <- map(chunks$text_chunks, stylermd::tidy_text)
   map2(chunks$text_chunks, c(chunks$r_chunks, list(character(0))), c) %>%
-    flatten_chr()
+    flatten_chr() %>%
+    stylermd::tidy_text()
 }
 
 #' Separate chunks within Rmd and Rnw contents
