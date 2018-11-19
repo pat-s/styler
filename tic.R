@@ -18,7 +18,5 @@ if (Sys.getenv("id_rsa") != "" && ci()$get_branch() == "master" && Sys.getenv("B
     add_step(step_push_deploy("docs", "gh-pages"))
 } else {
   get_stage("deploy") %>%
-    add_code_step(revdepcheck::revdep_check(num_workers = parallel::detectCores())) %>%
-    add_code_step(usethis::use_revdep()) %>%
-    add_step(step_push_deploy("revdep", "revdep"))
+    add_code_step(revdepcheck::revdep_check(num_workers = parallel::detectCores()))
 }
