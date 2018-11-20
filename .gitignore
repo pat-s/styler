@@ -8,3 +8,6 @@ docs
 .gitsum
 gitsum
 R/scratch
+revdep/*
+!revdep/problems.md
+!revdep/README.md
