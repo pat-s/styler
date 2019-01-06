@@ -11,7 +11,9 @@ NULL
 
 #' The tidyverse style
 #'
-#' Style code according to the tidyverse style guide.
+#' Style code according to the tidyverse style guide. We use
+#' [fallback::fallback()] to allow the user to specify configurations in yaml
+#' files. Learn more in th help file of [fallback::fallback()].
 #' @param scope The extent of manipulation. Can range from "none" (least
 #'   invasive) to "token" (most invasive). See 'Details'. This argument is a
 #'   vector of length one.
@@ -29,7 +31,6 @@ NULL
 #' @inheritParams create_style_guide
 #' @param math_token_spacing A list of parameters that define spacing around
 #'   math token, conveniently constructed using [specify_math_token_spacing()].
-
 #' @details The following options for `scope` are available.
 #'
 #' * "none": Performs no transformation at all.
@@ -51,13 +52,21 @@ NULL
 #' style_text(c("ab <- 3", "a  <-3"), strict = FALSE) # keeps alignment of "<-"
 #' style_text(c("ab <- 3", "a  <-3"), strict = TRUE) # drops alignment of "<-"
 #' @importFrom purrr partial
+#' @importFrom fallback fallback resolve_fallback
 #' @export
-tidyverse_style <- function(scope = "tokens",
-                            strict = TRUE,
-                            indent_by = 2,
-                            start_comments_with_one_space = FALSE,
-                            reindention = tidyverse_reindention(),
-                            math_token_spacing = tidyverse_math_token_spacing()) {
+tidyverse_style <- function(scope = fallback("tokens"),
+                            strict = fallback(TRUE),
+                            indent_by = fallback(2),
+                            start_comments_with_one_space = fallback(FALSE),
+                            reindention = fallback(tidyverse_reindention()),
+                            math_token_spacing = fallback(tidyverse_math_token_spacing())) {
+  scope <- resolve_fallback(scope)$value
+  strict <- resolve_fallback(strict)$value
+  indent_by <- resolve_fallback(indent_by)$value
+  start_comments_with_one_space <- resolve_fallback(start_comments_with_one_space)$value
+  reindention <- resolve_fallback(reindention)$value
+  math_token_spacing <- resolve_fallback(math_token_spacing)$value
+
   scope <- character_to_ordered(
     scope,
     c("none", "spaces", "indention", "line_breaks", "tokens")

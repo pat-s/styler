@@ -1,0 +1,5 @@
+scope: tokens
+strict: True
+indent_by: 2
+reindention: !expr styler::tidyverse_reindention()
+math_token_spacing: !expr styler::tidyverse_math_token_spacing()

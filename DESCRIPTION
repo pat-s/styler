@@ -28,7 +28,8 @@ Imports:
     tibble (>= 1.4.2),
     tools,
     withr,
-    xfun
+    xfun,
+    fallback (>= 0.0.0.9000)
 Suggests: 
     data.tree (>= 0.1.6),
     dplyr,
@@ -82,3 +83,5 @@ Collate:
     'vertical.R'
     'visit.R'
     'zzz.R'
+Remotes:  
+    lorenzwalthert/fallback

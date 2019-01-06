@@ -4,10 +4,11 @@
 \alias{tidyverse_style}
 \title{The tidyverse style}
 \usage{
-tidyverse_style(scope = "tokens", strict = TRUE, indent_by = 2,
-  start_comments_with_one_space = FALSE,
-  reindention = tidyverse_reindention(),
-  math_token_spacing = tidyverse_math_token_spacing())
+tidyverse_style(scope = fallback("tokens"), strict = fallback(TRUE),
+  indent_by = fallback(2),
+  start_comments_with_one_space = fallback(FALSE),
+  reindention = fallback(tidyverse_reindention()),
+  math_token_spacing = fallback(tidyverse_math_token_spacing()))
 }
 \arguments{
 \item{scope}{The extent of manipulation. Can range from "none" (least
@@ -35,7 +36,9 @@ conveniently constructed using \code{\link[=specify_reindention]{specify_reinden
 math token, conveniently constructed using \code{\link[=specify_math_token_spacing]{specify_math_token_spacing()}}.}
 }
 \description{
-Style code according to the tidyverse style guide.
+Style code according to the tidyverse style guide. We use
+\code{\link[fallback:fallback]{fallback::fallback()}} to allow the user to specify configurations in yaml
+files. Learn more in th help file of \code{\link[fallback:fallback]{fallback::fallback()}}.
 }
 \details{
 The following options for \code{scope} are available.
