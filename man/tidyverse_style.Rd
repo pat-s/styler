@@ -4,11 +4,13 @@
 \alias{tidyverse_style}
 \title{The tidyverse style}
 \usage{
-tidyverse_style(scope = fallback("tokens"), strict = fallback(TRUE),
-  indent_by = fallback(2),
-  start_comments_with_one_space = fallback(FALSE),
-  reindention = fallback(tidyverse_reindention()),
-  math_token_spacing = fallback(tidyverse_math_token_spacing()))
+tidyverse_style(scope = fallback("tokens", "styler.yaml"),
+  strict = fallback(TRUE, "styler.yaml"), indent_by = fallback(2,
+  "styler.yaml"), start_comments_with_one_space = fallback(FALSE,
+  "styler.yaml"), reindention = fallback(tidyverse_reindention(),
+  "styler.yaml"),
+  math_token_spacing = fallback(tidyverse_math_token_spacing(),
+  "styler.yaml"))
 }
 \arguments{
 \item{scope}{The extent of manipulation. Can range from "none" (least

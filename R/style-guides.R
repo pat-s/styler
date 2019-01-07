@@ -54,12 +54,12 @@ NULL
 #' @importFrom purrr partial
 #' @importFrom fallback fallback resolve_fallback
 #' @export
-tidyverse_style <- function(scope = fallback("tokens"),
-                            strict = fallback(TRUE),
-                            indent_by = fallback(2),
-                            start_comments_with_one_space = fallback(FALSE),
-                            reindention = fallback(tidyverse_reindention()),
-                            math_token_spacing = fallback(tidyverse_math_token_spacing())) {
+tidyverse_style <- function(scope = fallback("tokens", "styler.yaml"),
+                            strict = fallback(TRUE, "styler.yaml"),
+                            indent_by = fallback(2, "styler.yaml"),
+                            start_comments_with_one_space = fallback(FALSE, "styler.yaml"),
+                            reindention = fallback(tidyverse_reindention(), "styler.yaml"),
+                            math_token_spacing = fallback(tidyverse_math_token_spacing(), "styler.yaml")) {
   scope <- resolve_fallback(scope)$value
   strict <- resolve_fallback(strict)$value
   indent_by <- resolve_fallback(indent_by)$value
