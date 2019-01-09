@@ -31,7 +31,7 @@ style_active_file <- function() {
   } else if (is_plain_r_file(context$path) | is_unsaved_file(context$path)) {
     out <- try_transform_as_r_file(context, transformer)
   } else {
-    out <- stylermd::tidy_text(readLines(context$path))
+    out <- stylermd::tidy_text(context$contents)
   }
   rstudioapi::modifyRange(
     c(1, 1, length(context$contents) + 1, 1),
