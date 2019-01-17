@@ -22,7 +22,10 @@ style_line_break_around_curly <- function(strict, pd) {
     opening_before <- (pd$token == "'{'") & (pd$token_after != "COMMENT")
     to_break <- lag(opening_before, default = FALSE) | closing_before
     len_to_break <- sum(to_break)
-    pd$lag_newlines[to_break] <- ifelse(rep(strict, len_to_break),
+    pd$lag_newlines[to_break] <- ifelse(
+      # only one case in which ) before {: functino declaration. Rule not
+      # enforced if for edge case function() # \n {}
+      rep(strict & !pd$token_before[1] == "')'", len_to_break),
       1L,
       pmax(1L, pd$lag_newlines[to_break])
     )
@@ -48,6 +51,14 @@ remove_line_break_before_round_closing_fun_dec <- function(pd) {
   if (is_function_dec(pd)) {
     round_after <- pd$token == "')'" & pd$token_before != "COMMENT"
     pd$lag_newlines[round_after] <- 0L
+  }
+  pd
+}
+
+set_line_break_after_fun_dec_header <- function(pd) {
+  if (any(pd$token == "FUNCTION") && pd$child[[nrow(pd)]]$token[1] == "'{'") {
+    pos <- next_non_comment(pd, 1)
+    pd$child[[nrow(pd)]]$lag_newlines[pos] <- 2L
   }
   pd
 }

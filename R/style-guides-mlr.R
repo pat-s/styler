@@ -98,7 +98,8 @@ mlr_style <- function(scope = "tokens",
                                               strict
       ),
       remove_line_break_in_empty_fun_call,
-      add_line_break_after_pipe
+      add_line_break_after_pipe,
+      set_line_break_after_fun_dec_header
     )
   }
 

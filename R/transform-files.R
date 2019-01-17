@@ -209,9 +209,9 @@ parse_transform_serialize_r <- function(text, transformers) {
 #' @keywords internal
 apply_transformers <- function(pd_nested, transformers) {
   transformed_line_breaks <- pre_visit(
-    pd_nested,
-    c(transformers$initialize, transformers$line_break)
-  )
+    pd_nested, c(transformers$initialize)
+  ) %>%
+    pre_visit(c(transformers$line_break))
 
   transformed_updated_multi_line <- post_visit(
     transformed_line_breaks,
