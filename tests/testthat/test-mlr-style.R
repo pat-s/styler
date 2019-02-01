@@ -5,4 +5,8 @@ test_that("line break for multi-line function declaration", {
     transformer = style_text,
     style = mlr_style
   )
+  test_collection("mlr-style", "data-table",
+                  transformer = style_text,
+                  style = mlr_style
+  )
 })
