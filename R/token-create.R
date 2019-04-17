@@ -31,8 +31,8 @@ create_tokens <- function(tokens,
                           indents = 0,
                           terminal = TRUE,
                           child = NULL) {
-  len_text <- length(text)
-  data_frame(
+  len_text <- length(texts)
+  tibble(
     token = tokens,
     text = texts,
     short = substr(texts, 1, 5),
@@ -106,11 +106,12 @@ find_start_pos_id <- function(pd, pos, by, direction, after, candidates = NULL) 
 #' @param new_ids A vector with new ids
 #' @param after Whether the ids are created with `after = TRUE` (and hence
 #' should be in the range x.0-x.45) or not.
+#' @importFrom rlang abort
 #' @family token creators
 #' @keywords internal
 validate_new_pos_ids <- function(new_ids, after) {
   ref <- ifelse(after, floor(new_ids), ceiling(new_ids))
-  if (any(abs(new_ids - ref) > 0.5)) stop("too many ids assigned")
+  if (any(abs(new_ids - ref) > 0.5)) abort("too many ids assigned.")
 }
 
 #' Wrap an expression in curly braces

@@ -21,7 +21,7 @@ transform_files <- function(files, transformers, include_roxygen_examples) {
   )
   communicate_summary(changed, max_char)
   communicate_warning(changed, transformers)
-  data_frame(file = files, changed = changed)
+  tibble(file = files, changed = changed)
 }
 
 #' Transform a file and output a customized message
@@ -69,13 +69,14 @@ transform_file <- function(path,
 #'   parse tables.
 #' @param include_roxygen_examples Whether or not to style code in roxygen
 #'   examples.
+#' @inheritParams parse_transform_serialize_r
 #' @keywords internal
 #' @importFrom purrr when
-make_transformer <- function(transformers, include_roxygen_examples) {
+make_transformer <- function(transformers, include_roxygen_examples, warn_empty = TRUE) {
   force(transformers)
   function(text) {
     transformed_code <- text %>%
-      parse_transform_serialize_r(transformers) %>%
+      parse_transform_serialize_r(transformers, warn_empty = warn_empty) %>%
       when(
         include_roxygen_examples ~
         parse_transform_serialize_roxygen(., transformers),
@@ -151,19 +152,21 @@ split_roxygen_segments <- function(text, roxygen_examples) {
 #' Parse, transform and serialize text
 #'
 #' Wrapper function for the common three operations.
+#' @param warn_empty Whether or not a warning should be displayed when `text`
+#'   does not contain any tokens.
 #' @inheritParams compute_parse_data_nested
 #' @inheritParams apply_transformers
 #' @seealso [parse_transform_serialize_roxygen()]
+#' @importFrom rlang abort
 #' @keywords internal
-parse_transform_serialize_r <- function(text, transformers) {
+parse_transform_serialize_r <- function(text, transformers, warn_empty = TRUE) {
   text <- assert_text(text)
   pd_nested <- compute_parse_data_nested(text)
   start_line <- find_start_line(pd_nested)
   if (nrow(pd_nested) == 0) {
-    warning(
-      "Text to style did not contain any tokens. Returning empty string.",
-      call. = FALSE
-    )
+    if (warn_empty) {
+      warn("Text to style did not contain any tokens. Returning empty string.")
+    }
     return("")
   }
   transformed_pd <- apply_transformers(pd_nested, transformers)
@@ -254,6 +257,7 @@ can_verify_roundtrip <- function(transformers) {
 #' it is not the same. Note that this method ignores comments and no
 #' verification can be conducted if scope > "line_breaks".
 #' @inheritParams expressions_are_identical
+#' @importFrom rlang abort
 #' @examples
 #' styler:::verify_roundtrip("a+1", "a + 1")
 #' styler:::verify_roundtrip("a+1", "a + 1 # comments are dropped")
@@ -269,7 +273,7 @@ verify_roundtrip <- function(old_text, new_text) {
       "bug report on GitHub (https://github.com/r-lib/styler/issues)",
       "using a reprex."
     )
-    stop(msg, call. = FALSE)
+    abort(msg)
   }
 }
 

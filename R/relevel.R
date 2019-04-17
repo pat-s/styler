@@ -53,9 +53,14 @@ flatten_operators_one <- function(pd_nested) {
 #'   from left or from right.
 #' @keywords internal
 flatten_pd <- function(pd_nested, token, child_token = token, left = TRUE) {
-  token_pos <- which(pd_nested$token[-1] %in% token) + 1
-  if (length(token_pos) == 0) return(pd_nested)
-  pos <- token_pos[if_else(left, 1, length(token_pos))] + if_else(left, -1L, 1L)
+  token_pos_candidates <- which(pd_nested$token[-1] %in% token) + 1
+  if (length(token_pos_candidates) == 0) return(pd_nested)
+  token_pos <- token_pos_candidates[if_else(left, 1, length(token_pos_candidates))]
+  if (left) {
+    pos <- previous_non_comment(pd_nested, token_pos)
+  } else {
+    pos <- next_non_comment(pd_nested, token_pos)
+  }
   if (pos < 1) return(pd_nested)
   if (!any(pd_nested$child[[pos]]$token[-1] %in% child_token)) return(pd_nested)
   bind_with_child(pd_nested, pos)
@@ -82,7 +87,7 @@ bind_with_child <- function(pd_nested, pos) {
 #' @param pd A parse table.
 #' @keywords internal
 wrap_expr_in_expr <- function(pd) {
-  expr <- create_tokens(
+  create_tokens(
     "expr", "",
     pos_ids = create_pos_ids(pd, 1, after = FALSE),
     child = pd,
@@ -215,9 +220,10 @@ relocate_eq_assign_one <- function(pd) {
 #' Adds line and col information to an expression from its child
 #'
 #' @param pd A parse table.
+#' @importFrom rlang abort
 #' @keywords internal
 add_line_col_to_wrapped_expr <- function(pd) {
-  if (nrow(pd) > 1) stop("pd must be a wrapped expression that has one row.")
+  if (nrow(pd) > 1) abort("pd must be a wrapped expression that has one row.")
   pd$line1 <- pd$child[[1]]$line1[1]
   pd$line2 <- last(pd$child[[1]]$line2)
   pd$col1 <- pd$child[[1]]$col1[1]
