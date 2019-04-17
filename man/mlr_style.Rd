@@ -7,7 +7,8 @@
 mlr_style(scope = "tokens", strict = TRUE, indent_by = 2,
   start_comments_with_one_space = FALSE,
   reindention = tidyverse_reindention(),
-  math_token_spacing = tidyverse_math_token_spacing())
+  math_token_spacing = tidyverse_math_token_spacing(),
+  min_lines_for_break = 10)
 }
 \arguments{
 \item{scope}{The extent of manipulation. Can range from "none" (least
@@ -33,6 +34,10 @@ conveniently constructed using \code{\link[=specify_reindention]{specify_reinden
 
 \item{math_token_spacing}{A list of parameters that define spacing around
 math token, conveniently constructed using \code{\link[=specify_math_token_spacing]{specify_math_token_spacing()}}.}
+
+\item{min_lines_for_break}{The minimal number of lines required within a
+function declaration to make styler adding a blank line between header and
+body.}
 }
 \description{
 Style code according to the mlr style guide.
@@ -62,3 +67,5 @@ Other obtain transformers: \code{\link{tidyverse_style}}
 
 Other style_guides: \code{\link{tidyverse_style}}
 }
+\concept{obtain transformers}
+\concept{style_guides}

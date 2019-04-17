@@ -3,6 +3,9 @@
 #'
 #' Style code according to the mlr style guide.
 #' @inheritParams tidyverse_style
+#' @param min_lines_for_break The minimal number of lines required within a
+#'   function declaration to make styler adding a blank line between header and
+#'   body.
 #' @details The following options for `scope` are available.
 #'
 #' * "none": Performs no transformation at all.
@@ -24,11 +27,12 @@
 #' @importFrom purrr partial
 #' @export
 mlr_style <- function(scope = "tokens",
-                            strict = TRUE,
-                            indent_by = 2,
-                            start_comments_with_one_space = FALSE,
-                            reindention = tidyverse_reindention(),
-                            math_token_spacing = tidyverse_math_token_spacing()) {
+                      strict = TRUE,
+                      indent_by = 2,
+                      start_comments_with_one_space = FALSE,
+                      reindention = tidyverse_reindention(),
+                      math_token_spacing = tidyverse_math_token_spacing(),
+                      min_lines_for_break = 10) {
   scope <- character_to_ordered(
     scope,
     c("none", "spaces", "indention", "line_breaks", "tokens")
@@ -99,7 +103,9 @@ mlr_style <- function(scope = "tokens",
       ),
       remove_line_break_in_empty_fun_call,
       add_line_break_after_pipe,
-      set_line_break_after_fun_dec_header
+      partial(set_line_break_after_fun_dec_header,
+              min_lines_for_break = min_lines_for_break
+      )
     )
   }
 

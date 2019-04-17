@@ -55,10 +55,18 @@ remove_line_break_before_round_closing_fun_dec <- function(pd) {
   pd
 }
 
-set_line_break_after_fun_dec_header <- function(pd) {
-  if (any(pd$token == "FUNCTION") && pd$child[[nrow(pd)]]$token[1] == "'{'") {
+
+set_line_break_after_fun_dec_header <- function(pd, min_lines_for_break) {
+  if (any(pd$token == "FUNCTION") &&
+      pd$child[[nrow(pd)]]$token[1] == "'{'"
+  ) {
+
     pos <- next_non_comment(pd, 1)
-    pd$child[[nrow(pd)]]$lag_newlines[pos] <- 2L
+    pd$child[[nrow(pd)]]$lag_newlines[pos] <- ifelse(
+      n_lines(pd) > min_lines_for_break,
+      2L,
+      1L
+    )
   }
   pd
 }

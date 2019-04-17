@@ -146,3 +146,18 @@ extend_if_comment <- function(pd, pos) {
 map_filetype_to_pattern <- function(filetype) {
   paste0("(", paste(set_and_assert_arg_filetype(filetype), collapse = "|"), ")$")
 }
+
+#' Count the number of line breaks in a parse table and all its children
+#'
+#' This can be useful if styling depends on the number of lines within an
+#' expression.
+#' @param pd A parse table
+#' @keywords internal
+n_lines <- function(pd) {
+  sum(map_int(pd$child, newlines_count_top_nest)) +
+    newlines_count_top_nest(pd)
+}
+
+newlines_count_top_nest <- function(pd) {
+  sum(pd$lag_newlines)
+}

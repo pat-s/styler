@@ -64,3 +64,5 @@ Other obtain transformers: \code{\link{mlr_style}}
 
 Other style_guides: \code{\link{mlr_style}}
 }
+\concept{obtain transformers}
+\concept{style_guides}
