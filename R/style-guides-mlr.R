@@ -102,6 +102,7 @@ mlr_style <- function(scope = "tokens",
       ),
       remove_line_break_in_empty_fun_call,
       add_line_break_after_pipe,
+      add_line_break_before_round_closing_after_curly(),
       # should be last because it depends on other line breaks via n_lines()
       partial(set_line_break_after_fun_dec_header,
               min_lines_for_break = min_lines_for_break
