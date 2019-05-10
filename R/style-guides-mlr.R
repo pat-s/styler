@@ -61,13 +61,13 @@ mlr_style <- function(scope = "tokens",
         style_space_around_tilde, strict = strict
       ),
       spacing_around_op = if (strict) {
-        #set_space_around_op
-        add_space_around_op
+        set_space_around_op
       }else {
         add_space_around_op
       },
       spacing_around_comma = if (strict) {
-        set_space_after_comma
+        #set_space_after_comma
+        add_space_after_comma
       } else {
         add_space_after_comma
       },
