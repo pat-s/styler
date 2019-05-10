@@ -61,7 +61,8 @@ mlr_style <- function(scope = "tokens",
         style_space_around_tilde, strict = strict
       ),
       spacing_around_op = if (strict) {
-        set_space_around_op
+        #set_space_around_op
+        add_space_around_op
       }else {
         add_space_around_op
       },
