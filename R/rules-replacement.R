@@ -7,8 +7,10 @@ force_assignment_op <- function(pd) {
 
 force_assignment_eq <- function(pd) {
   to_replace <- pd$token == "LEFT_ASSIGN" & pd$text == "<-"
-  pd$token[to_replace] <- "EQ_ASSIGN"
-  pd$text[to_replace] <- "="
+  if (any(to_replace) && next_terminal(pd)$token == "'('") {
+    pd$token[to_replace] <- "EQ_ASSIGN"
+    pd$text[to_replace] <- "="
+  }
   pd
 }
 

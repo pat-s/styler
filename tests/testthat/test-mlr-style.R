@@ -9,4 +9,8 @@ test_that("line break for multi-line function declaration", {
                   transformer = style_text,
                   style = mlr_style
   )
+  test_collection("mlr-style", "eq-sub-replacement",
+                  transformer = style_text,
+                  style = mlr_style
+  )
 })
