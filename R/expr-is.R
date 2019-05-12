@@ -9,9 +9,58 @@ NULL
 #'   curly brackets.
 #' @keywords internal
 is_curly_expr <- function(pd) {
-  if (is.null(pd)) return(FALSE)
+  if (is.null(pd)) {
+    return(FALSE)
+  }
   pd$token[1] == "'{'"
 }
+
+is_for_expr <- function(pd) {
+  pd$token[1] == "FOR"
+}
+
+#' @describeIn pd_is Checks whether `pd` contains is a conditional expression.
+#' @keywords internal
+is_cond_expr <- function(pd) {
+  pd$token[1] == "IF"
+}
+
+#' @describeIn pd_is Checks whether `pd` contains is a while loop.
+#' @keywords internal
+is_while_expr <- function(pd) {
+  pd$token[1] == "WHILE"
+}
+
+#' @describeIn pd_is Checks whether `pd` is a function call.
+#' @keywords internal
+is_function_call <- function(pd) {
+  if (is.null(pd)) {
+    return(FALSE)
+  }
+  if (is.na(pd$token_before[2])) {
+    return(FALSE)
+  }
+  pd$token_before[2] == "SYMBOL_FUNCTION_CALL"
+}
+
+#' @describeIn pd_is Checks whether `pd` is a function declaration.
+#' @keywords internal
+is_function_dec <- function(pd) {
+  if (is.null(pd)) {
+    return(FALSE)
+  }
+  pd$token[1] == "FUNCTION"
+}
+
+#' @describeIn pd_is Checks for every token whether or not it is a comment.
+#' @keywords internal
+is_comment <- function(pd) {
+  if (is.null(pd)) {
+    return(FALSE)
+  }
+  pd$token == "COMMENT"
+}
+
 
 
 #' Check whether a parse table contains a tilde
@@ -27,7 +76,9 @@ is_curly_expr <- function(pd) {
 #' expression (like `a~b`).
 #' @keywords internal
 is_tilde_expr <- function(pd, tilde_pos = c(1, 2)) {
-  if (is.null(pd) || nrow(pd) == 1) return(FALSE)
+  if (is.null(pd) || nrow(pd) == 1) {
+    return(FALSE)
+  }
   any(pd$token[tilde_pos] == "'~'")
 }
 
@@ -42,29 +93,12 @@ is_symmetric_tilde_expr <- function(pd) {
 }
 
 is_subset_expr <- function(pd) {
-  if (is.null(pd) || nrow(pd) == 1) return(FALSE)
+  if (is.null(pd) || nrow(pd) == 1) {
+    return(FALSE)
+  }
   pd$token[2] == "'['"
 }
 
-#' @describeIn pd_is Checks whether `pd` is a function call.
-#' @keywords internal
-is_function_call <- function(pd) {
-  if (is.null(pd)) return(FALSE)
-  if (is.na(pd$token_before[2])) return(FALSE)
-  pd$token_before[2] == "SYMBOL_FUNCTION_CALL"
-}
-
-#' @describeIn pd_is Checks whether `pd` is a function declaration.
-#' @keywords internal
-is_function_dec <- function(pd) {
-  if (is.null(pd)) return(FALSE)
-  pd$token[1] == "FUNCTION"
-}
-
-is_comment <- function(pd) {
-  if (is.null(pd)) return(FALSE)
-  pd$token == "COMMENT"
-}
 
 #' Identify comments that are shebangs
 #'
@@ -127,8 +161,4 @@ contains_else_expr_that_needs_braces <- function(pd) {
   } else {
     FALSE
   }
-}
-
-is_cond_expr <- function(pd) {
-  pd$token[1] == "IF"
 }

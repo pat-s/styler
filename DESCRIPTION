@@ -1,7 +1,7 @@
 Package: styler
 Type: Package
 Title: Non-Invasive Pretty Printing of R Code
-Version: 1.1.0.9000
+Version: 1.1.1.9000
 Authors@R: 
     c(person(given = "Kirill",
              family = "Müller",
@@ -18,16 +18,16 @@ URL: https://github.com/r-lib/styler
 BugReports: https://github.com/r-lib/styler/issues
 Imports: 
     backports (>= 1.1.0),
-    cli,
+    cli (>= 1.1.0),
     magrittr (>= 1.0.1),
     purrr (>= 0.2.3),
-    rematch2,
+    rematch2 (>= 2.0.1),
     rlang (>= 0.1.1),
     rprojroot (>= 1.1),
     tibble (>= 1.4.2),
     tools,
-    withr,
-    xfun
+    withr (>= 1.0.0),
+    xfun (>= 0.1)
 Suggests: 
     data.tree (>= 0.1.6),
     dplyr,
@@ -78,6 +78,9 @@ Collate:
     'transform-files.R'
     'ui.R'
     'unindent.R'
+    'utils-files.R'
+    'utils-navigate-nest.R'
+    'utils-strings.R'
     'utils.R'
     'vertical.R'
     'visit.R'
