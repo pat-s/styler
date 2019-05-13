@@ -29,7 +29,6 @@ NULL
 #' @inheritParams create_style_guide
 #' @param math_token_spacing A list of parameters that define spacing around
 #'   math token, conveniently constructed using [specify_math_token_spacing()].
-
 #' @details The following options for `scope` are available.
 #'
 #' * "none": Performs no transformation at all.
@@ -141,7 +140,7 @@ tidyverse_style <- function(scope = "tokens",
         )
       },
       remove_line_break_in_empty_fun_call,
-      add_line_break_after_pipe
+      add_line_break_after_pipe = if (strict) add_line_break_after_pipe
     )
   }
 
@@ -152,8 +151,8 @@ tidyverse_style <- function(scope = "tokens",
       resolve_semicolon,
       add_brackets_in_pipe,
       remove_terminal_token_before_and_after,
-      wrap_if_else_multi_line_in_curly =
-        if (strict) wrap_if_else_multi_line_in_curly
+      wrap_if_else_while_for_multi_line_in_curly =
+        if (strict) wrap_if_else_while_for_multi_line_in_curly
     )
   }
 

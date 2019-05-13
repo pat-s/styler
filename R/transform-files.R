@@ -114,7 +114,9 @@ make_transformer <- function(transformers, include_roxygen_examples, warn_empty 
 #' @keywords internal
 parse_transform_serialize_roxygen <- function(text, transformers) {
   roxygen_seqs <- identify_start_to_stop_of_roxygen_examples_from_text(text)
-  if (length(roxygen_seqs) < 1L) return(text)
+  if (length(roxygen_seqs) < 1L) {
+    return(text)
+  }
   split_segments <- split_roxygen_segments(text, unlist(roxygen_seqs))
   map_at(split_segments$separated, split_segments$selectors,
     style_roxygen_code_example,
@@ -139,7 +141,9 @@ parse_transform_serialize_roxygen <- function(text, transformers) {
 #' @importFrom rlang seq2
 #' @keywords internal
 split_roxygen_segments <- function(text, roxygen_examples) {
-  if (is.null(roxygen_examples)) return(lst(separated = list(text), selectors = NULL))
+  if (is.null(roxygen_examples)) {
+    return(lst(separated = list(text), selectors = NULL))
+  }
   all_lines <- seq2(1L, length(text))
   active_segment <- as.integer(all_lines %in% roxygen_examples)
   segment_id <- cumsum(abs(c(0L, diff(active_segment)))) + 1L
@@ -211,14 +215,10 @@ parse_transform_serialize_r <- function(text, transformers, warn_empty = TRUE) {
 #' @importFrom purrr flatten
 #' @keywords internal
 apply_transformers <- function(pd_nested, transformers) {
-  transformed_line_breaks <- pre_visit(
-    pd_nested, c(transformers$initialize)
-  ) %>%
-    pre_visit(c(transformers$line_break))
 
   transformed_updated_multi_line <- post_visit(
-    transformed_line_breaks,
-    c(set_multi_line, update_newlines)
+    pd_nested,
+    c(transformers$initialize, transformers$line_break, set_multi_line, update_newlines)
   )
 
   transformed_all <- pre_visit(
@@ -238,7 +238,7 @@ apply_transformers <- function(pd_nested, transformers) {
 
 
 
-#' Check whether a roundtrip verification can be carried out
+#' Check whether a round trip verification can be carried out
 #'
 #' If scope was set to "line_breaks" or lower (compare [tidyverse_style()]),
 #' we can compare the expression before and after styling and return an error if
