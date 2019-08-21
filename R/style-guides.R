@@ -85,16 +85,9 @@ tidyverse_style <- function(scope = "tokens",
         style_space_around_tilde,
         strict = strict
       ),
-      spacing_around_op = if (strict) {
-        set_space_around_op
-      } else {
-        add_space_around_op
-      },
-      spacing_around_comma = if (strict) {
-        set_space_after_comma
-      } else {
-        add_space_after_comma
-      },
+      spacing_around_op = purrr::partial(set_space_around_op,
+        strict = strict
+      ),
       remove_space_after_opening_paren,
       remove_space_after_excl,
       set_space_after_bang_bang,
@@ -111,7 +104,8 @@ tidyverse_style <- function(scope = "tokens",
         add_space_before_comments
       },
       set_space_between_levels,
-      set_space_between_eq_sub_and_comma
+      set_space_between_eq_sub_and_comma,
+      set_space_in_curly_curly
     )
   }
 
@@ -128,6 +122,9 @@ tidyverse_style <- function(scope = "tokens",
       style_line_break_around_curly = partial(style_line_break_around_curly,
         strict
       ),
+      # must be after style_line_break_around_curly as it remove line
+      # breaks again for {{.
+      set_line_break_around_curly_curly,
       set_line_break_after_opening_if_call_is_multi_line = if (strict)
         partial(
           set_line_break_after_opening_if_call_is_multi_line,
@@ -151,8 +148,8 @@ tidyverse_style <- function(scope = "tokens",
       resolve_semicolon,
       add_brackets_in_pipe,
       remove_terminal_token_before_and_after,
-      wrap_if_else_while_for_multi_line_in_curly =
-        if (strict) wrap_if_else_while_for_multi_line_in_curly
+      wrap_if_else_while_for_fun_multi_line_in_curly =
+        if (strict) wrap_if_else_while_for_fun_multi_line_in_curly
     )
   }
 

@@ -1,25 +1,42 @@
+#' Set spaces around operators
+#'
+#' Alignement is kept, if detected.
 #' @include token-define.R
 #' @keywords internal
-add_space_around_op <- function(pd_flat) {
+#' @include token-define.R
+set_space_around_op <- function(pd_flat, strict) {
+  # spacing and operator in same function because alternative is
+  # calling token_is_on_aligned_line() twice because comma and operator spacing
+  # depends on it.
+  pd_flat <- add_space_after_comma(pd_flat)
   op_after <- pd_flat$token %in% op_token
   op_before <- lead(op_after, default = FALSE)
-  idx_before <- op_before & (pd_flat$newlines == 0L)
-  pd_flat$spaces[idx_before] <- pmax(pd_flat$spaces[idx_before], 1L)
-  idx_after <- op_after & (pd_flat$newlines == 0L)
-  pd_flat$spaces[idx_after] <- pmax(pd_flat$spaces[idx_after], 1L)
-  pd_flat
-}
-
-#' @include token-define.R
-#' @keywords internal
-set_space_around_op <- function(pd_flat) {
-  op_after <- pd_flat$token %in% op_token
+  # include comma, but only for after
+  op_after <- op_after | pd_flat$token == "','"
   if (!any(op_after)) {
     return(pd_flat)
   }
-  op_before <- lead(op_after, default = FALSE)
-  pd_flat$spaces[op_before & (pd_flat$newlines == 0L)] <- 1L
-  pd_flat$spaces[op_after & (pd_flat$newlines == 0L)] <- 1L
+  if (sum(pd_flat$lag_newlines) > 2 &&
+    is_function_call(pd_flat) &&
+    any(pd_flat$token %in% c("EQ_SUB", "','"))
+  ) {
+    is_on_aligned_line <- token_is_on_aligned_line(pd_flat)
+  } else {
+    is_on_aligned_line <- FALSE
+  }
+  # operator
+  must_have_space_before <- op_before & (pd_flat$newlines == 0L) & !is_on_aligned_line
+  pd_flat$spaces[must_have_space_before] <- if (strict) {
+    1L
+  } else {
+    pmax(pd_flat$spaces[must_have_space_before], 1L)
+  }
+  must_have_space_after <- op_after & (pd_flat$newlines == 0L) & !is_on_aligned_line
+  pd_flat$spaces[must_have_space_after] <- if (strict) {
+    1L
+  } else {
+    pmax(pd_flat$spaces[must_have_space_after], 1L)
+  }
   pd_flat
 }
 
@@ -158,7 +175,35 @@ add_space_after_for_if_while <- function(pd_flat) {
   pd_flat
 }
 
+#' @rdname set_line_break_around_curly_curly
+#' @keywords internal
+set_space_in_curly_curly <- function(pd) {
+  if (is_curly_expr(pd)) {
+    after_inner_opening <- pd$token == "'{'" & pd$token_before == "'{'"
+    before_inner_closing <- lead(pd$token == "'}'" & pd$token_after == "'}'")
+    is_curly_curly_inner <- any(after_inner_opening, na.rm = TRUE) &&
+      any(before_inner_closing, na.rm = TRUE)
+    if (is_curly_curly_inner) {
+      pd$spaces[after_inner_opening] <- 1L
+      pd$spaces[before_inner_closing] <- 1L
+    }
+
+    after_outer_opening <- pd$token == "'{'" & pd$token_after == "'{'"
+    before_outer_closing <- lead(pd$token == "'}'" & pd$token_before == "'}'")
+    is_curly_curly_outer <- any(after_outer_opening, na.rm = TRUE) &&
+      any(before_outer_closing, nna.rm = TRUE)
+    if (is_curly_curly_outer) {
+      pd$spaces[after_outer_opening] <- 0L
+      pd$spaces[before_outer_closing] <- 0L
+    }
+  }
+  pd
+}
+
 add_space_before_brace <- function(pd_flat) {
+  # TODO remove this, it has no effect since { can only appear in the first
+  # position of the nest and taking lead(op_after, default = FALSE) will always
+  # yield a vector of FALSE only.
   op_after <- pd_flat$token %in% "'{'"
   if (!any(op_after)) {
     return(pd_flat)

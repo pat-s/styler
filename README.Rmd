@@ -35,14 +35,14 @@ styler can be customized to format code according to other style guides too.
 You can install the package from CRAN:
 
 ```{r, eval = FALSE}
-install.packages("styler") 
+install.packages("styler")
 ```
 
 Or get the development version from GitHub:
 
 ```{r, eval = FALSE} 
-# install.packages("remotes") 
-remotes::install_github("r-lib/styler") 
+# install.packages("remotes")
+remotes::install_github("r-lib/styler")
 ```
 
 ## API
@@ -98,11 +98,11 @@ If you wish to keep alignment as is, you can use `strict = FALSE`:
 ```{r} 
 style_text(
   c(
-    "first  <- 4", 
+    "first  <- 4",
     "second <- 1+1"
   ),
-  strict = FALSE 
-) 
+  strict = FALSE
+)
 ```
 
 This was just the tip of the iceberg. Learn more about customization with the
@@ -127,6 +127,8 @@ styler functionality is made available through other packages, most notably
   knitr. use `tidy = "styler"` in the header of a code chunks (e.g. ` ```{r
   name-of-the-chunk, tidy = "styler"}`), or `knitr::opts_chunk$set(tidy =
   "styler")` at the top of your RMarkdown script.
+* as a pre-commit hook `style-files` in 
+  https://github.com/lorenzwalthert/pre-commit-hooks.
 * pretty-printing of [drake](https://github.com/ropensci/drake) workflow data
   frames with `drake::drake_plan_source()`.
 * Adding styler as a fixer to the 

@@ -52,12 +52,17 @@ style_active_file <- function() {
   transformer <- make_transformer(get_addins_style_transformer(),
     include_roxygen_examples = TRUE, warn_empty = is_plain_r_file(context$path)
   )
+  is_r_file <- any(
+    is_plain_r_file(context$path),
+    is_unsaved_file(context$path),
+    is_rprofile_file(context$path)
+  )
 
   if (is_rmd_file(context$path)) {
     out <- transform_mixed(context$contents, transformer, filetype = "Rmd")
   } else if (is_rnw_file(context$path)) {
     out <- transform_mixed(context$contents, transformer, filetype = "Rnw")
-  } else if (is_plain_r_file(context$path) | is_unsaved_file(context$path)) {
+  } else if (is_r_file) {
     out <- try_transform_as_r_file(context, transformer)
   } else {
     abort("Can only style .R, .Rmd and .Rnw files.")
@@ -90,7 +95,7 @@ style_selection <- function() {
   if (all(nchar(text) == 0)) abort("No code selected")
   out <- style_text(text, transformers = get_addins_style_transformer())
   rstudioapi::modifyRange(
-    context$selection[[1]]$range, paste0(out, collapse = "\n"),
+    context$selection[[1]]$range, paste0(c(out, if (context$selection[[1]]$range$end[2] == 1) ""), collapse = "\n"),
     id = context$id
   )
   if (Sys.getenv("save_after_styling") == TRUE && context$path != "") {
@@ -114,9 +119,10 @@ set_style_transformers <- function() {
       "Enter the name of a style transformer, e.g. `styler::tidyverse_style()`",
       current_style
     )
-  parsed_new_style <- with_handlers({
-    transformers <- eval(parse(text = new_style))
-    style_text(c("a = 2", "function() {", "NULL", "}"))
+  if (!is.null(new_style)) {
+    parsed_new_style <- with_handlers({
+      transformers <- eval(parse(text = new_style))
+      style_text(c("a = 2", "function() {", "NULL", "}"))
     },
     error = function(e) {
       abort(paste0(
@@ -124,8 +130,10 @@ set_style_transformers <- function() {
         new_style, "\" is not valid: ", e$message
       ))
     }
-  )
-  options(styler.addins_style_transformer = new_style)
+    )
+    options(styler.addins_style_transformer = new_style)
+  }
+
   invisible(current_style)
 }
 
