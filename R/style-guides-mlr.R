@@ -60,11 +60,9 @@ mlr_style <- function(scope = "tokens",
       style_space_around_tilde = partial(
         style_space_around_tilde, strict = strict
       ),
-      spacing_around_op = if (strict) {
-        set_space_around_op
-      }else {
-        add_space_around_op
-      },
+      spacing_around_op = purrr::partial(
+        set_space_around_op, strict = strict
+      ),
       spacing_around_comma = if (strict) {
         #set_space_after_comma
         add_space_after_comma
