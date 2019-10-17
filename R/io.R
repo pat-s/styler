@@ -74,13 +74,13 @@ read_utf8_bare <- function(con, warn = TRUE) {
         "The file ", con, " is not encoded in UTF-8. ",
         "These lines contain invalid UTF-8 characters: "
       ),
-      paste(c(head(i), if (n > 6) "..."), collapse = ", ")
+      paste(c(utils::head(i), if (n > 6) "..."), collapse = ", ")
     )
   }
   x
 }
 
-#' Drop-in replacement for [xfun:::invalid_utf8()]
+#' Drop-in replacement for `xfun:::invalid_utf8()`.
 #' @keywords internal
 invalid_utf8 <- function(x) {
   which(!is.na(x) & is.na(iconv(x, "UTF-8", "UTF-8")))
