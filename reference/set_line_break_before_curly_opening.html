@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Identify comments that are shebangs — is_shebang • styler</title>
+<title>Set line break before a curly brace — set_line_break_before_curly_opening • styler</title>
 
 
 <!-- jquery -->
@@ -35,10 +35,17 @@
 
 
 
-<meta property="og:title" content="Identify comments that are shebangs — is_shebang" />
-<meta property="og:description" content="Shebangs should be preserved and no space should be inserted between
-# and !. A comment is a shebang if it is the first top level token
-(identified with pos_id) and if it starts with #!." />
+<meta property="og:title" content="Set line break before a curly brace — set_line_break_before_curly_opening" />
+<meta property="og:description" content="Rule:
+Principle: Function arguments that consist of a braced expression always
+need to start on a new line
+Exception: ... unless it's the last argument and all other
+arguments fit on the line of the function call
+Exception: ... or they are named.
+Extension: Also, expressions following on braced expressions also cause a
+line trigger.
+
+" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -137,36 +144,61 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Identify comments that are shebangs</h1>
-    <small class="dont-index">Source: <a href='https://github.com/r-lib/styler/blob/master/R/expr-is.R'><code>R/expr-is.R</code></a></small>
-    <div class="hidden name"><code>is_shebang.Rd</code></div>
+    <h1>Set line break before a curly brace</h1>
+    <small class="dont-index">Source: <a href='https://github.com/r-lib/styler/blob/master/R/rules-line-break.R'><code>R/rules-line-break.R</code></a></small>
+    <div class="hidden name"><code>set_line_break_before_curly_opening.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Shebangs should be preserved and no space should be inserted between
-# and !. A comment is a shebang if it is the first top level token
-(identified with <code>pos_id</code>) and if it starts with <code>#!</code>.</p>
+    <p>Rule:</p><ul>
+<li><p>Principle: Function arguments that consist of a braced expression always
+need to start on a new line</p></li>
+<li><p>Exception: <a href='https://rdrr.io/r/base/dots.html'>...</a> unless it's the last argument and all other
+arguments fit on the line of the function call</p></li>
+<li><p>Exception: <a href='https://rdrr.io/r/base/dots.html'>...</a> or they are named.</p></li>
+<li><p>Extension: Also, expressions following on braced expressions also cause a
+line trigger.</p></li>
+</ul>
+
     </div>
 
-    <pre class="usage"><span class='fu'>is_shebang</span>(<span class='no'>pd</span>)</pre>
+    <pre class="usage"><span class='fu'>set_line_break_before_curly_opening</span>(<span class='no'>pd</span>)</pre>
 
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>pd</th>
-      <td><p>A parse table.</p></td>
-    </tr>
-    </table>
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='style_text.html'>style_text</a></span>(<span class='st'>"#!/usr/bin/env Rscript"</span>)</div><div class='output co'>#&gt; <span style='color: #9E9E9E;font-style: italic;'>#!/usr/bin/env Rscript</span><span></div></span></pre>
+    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
+<span class='fu'><a href='https://rdrr.io/r/base/conditions.html'>tryCatch</a></span>(
+  {
+    <span class='fu'>f</span>(<span class='fl'>8</span>)
+  },
+  <span class='kw'>error</span> <span class='kw'>=</span> <span class='kw'>function</span>(<span class='no'>e</span>) <span class='kw'>NULL</span>
+)
+<span class='co'># last-argument case</span>
+<span class='fu'>testthat</span>(<span class='st'>"braces braces are cool"</span>, {
+  <span class='fu'>code</span>(<span class='kw'>to</span> <span class='kw'>=</span> <span class='no'>execute</span>)
+})
+<span class='fu'>call2</span>(
+  <span class='kw'>x</span> <span class='kw'>=</span> <span class='fl'>2</span>,
+  {
+    <span class='fu'>code</span>(<span class='kw'>to</span> <span class='kw'>=</span> <span class='no'>execute</span>)
+  },
+  <span class='kw'>c</span> <span class='kw'>=</span> { <span class='co'># this is the named case</span>
+    <span class='fu'>g</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='fl'>7</span>)
+  }
+)
+<span class='fu'>tryGugus</span>(
+  {
+    <span class='fu'>g5</span>(<span class='kw'>k</span> <span class='kw'>=</span> <span class='no'>na</span>)
+  },
+  <span class='no'>a</span> + <span class='no'>b</span> <span class='co'># line break also here because</span>
+  <span class='co'># preceded by brace expression</span>
+)
+}</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-      <li><a href="#arguments">Arguments</a></li>
       <li><a href="#examples">Examples</a></li>
     </ul>
 
