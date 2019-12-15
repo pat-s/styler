@@ -1,5 +1,13 @@
 # styler 1.2.0.9000
 
+* styler caches results of styling, so applying styler to code it has styled
+  before will be instantaneous. This brings large speed boosts in many
+  situations, e.g. when `style_pkg()` is run but only a few files have changed
+  since the last styling or when using the [styler pre-commit
+  hook](https://github.com/lorenzwalthert/precommit). See `help("caching")`
+  for details (#538).
+
+
 * ignore certain lines using `# styler: off` and `#styler: on` or custom 
   markers, see `help("stylerignore")` (#560).
 
@@ -20,9 +28,9 @@
 
 ## New features
 
-* Aligned function calls are detected and kept as is if they match the styler 
-  [definition for aligned function calls](https://styler.r-lib.org/articles/detect-alignment.html)
-  (#537).
+* Aligned function calls are detected and remain unchanged if they match the styler
+  [definition for aligned function
+  calls](https://styler.r-lib.org/articles/detect-alignment.html) (#537).
 
 * curly-curly (`{{`) syntactic sugar introduced with rlang 0.4.0 is now 
   explicitly handled, where previously it was just treated as two consecutive 

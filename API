@@ -2,7 +2,11 @@
 
 ## Exported functions
 
-create_style_guide(initialize = default_style_guide_attributes, line_break = NULL, space = NULL, token = NULL, indention = NULL, use_raw_indention = FALSE, reindention = tidyverse_reindention())
+cache_activate(cache_name = NULL, verbose = TRUE)
+cache_clear(cache_name = NULL, ask = TRUE)
+cache_deactivate(verbose = TRUE)
+cache_info(cache_name = NULL, format = "both")
+create_style_guide(initialize = default_style_guide_attributes, line_break = NULL, space = NULL, token = NULL, indention = NULL, use_raw_indention = FALSE, reindention = tidyverse_reindention(), style_guide_name = NULL, style_guide_version = NULL)
 default_style_guide_attributes(pd_flat)
 mlr_style(scope = "tokens", strict = TRUE, indent_by = 2, start_comments_with_one_space = FALSE, reindention = tidyverse_reindention(), math_token_spacing = tidyverse_math_token_spacing(), min_lines_for_break = 10)
 specify_math_token_spacing(zero = "'^'", one = c("'+'", "'-'", "'*'", "'/'"))
