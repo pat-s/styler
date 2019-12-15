@@ -1,0 +1,31 @@
+1. Language
+2. File names
+3. Line length
+4. Tabs
+5. Indentation
+6. Strings
+7. Always use `TRUE` and `FALSE` instead of `T` and `F`
+8. Always write integers as `1L` instead of `1`
+9. Write `1:3` instead of `c(1:3)`
+10. Assignment operator
+11. Spacing around operators and commas
+12. Curly braces
+13. `if`, `for`, `while` statements
+14. No extra whitespaces for parenthesis
+15. Return statement
+16. One command per line and semicolon
+17. Use whitespace lines to structure your code
+18. Comments
+19. Function names
+20. Variable and function argument names
+21. Documenting and argument checks
+22. Code distribution in files
+23. Function length and abstraction
+24. R scripts: `library` / `require` and `source` statements
+25. Local helper functions defined in a parent function
+26. Nearly never use global variables
+27. FIXMEs
+28. Object-oriented programming
+29. Don't repeat yourself
+30. Exceptions to the rules
+31. The existing code base always has preference

@@ -75,3 +75,20 @@ option_read <- function(x, default = NULL, error_if_not_found = TRUE) {
   }
 
 }
+
+#' Count the number of line breaks in a parse table and all its children
+#'
+#' This can be useful if styling depends on the number of lines within an
+#' expression.
+#' @param pd A parse table
+#' @keywords internal
+n_lines <- function(pd) {
+  sum(map_int(pd$child, newlines_count_top_nest)) +
+    newlines_count_top_nest(pd)
+}
+
+newlines_count_top_nest <- function(pd) {
+  sum(pd$lag_newlines)
+}
+
+
