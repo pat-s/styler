@@ -126,14 +126,16 @@ mlr_style <- function(scope = "tokens",
 
   create_style_guide(
     # transformer functions
-    initialize        = default_style_guide_attributes,
-    line_break        = line_break_manipulators,
-    space             = space_manipulators,
-    token             = token_manipulators,
-    indention         = indention_modifier,
+    initialize          = default_style_guide_attributes,
+    line_break          = line_break_manipulators,
+    space               = space_manipulators,
+    token               = token_manipulators,
+    indention           = indention_modifier,
     # transformer options
-    use_raw_indention = use_raw_indention,
-    reindention       = reindention
+    use_raw_indention   = use_raw_indention,
+    reindention         = reindention,
+    style_guide_name    = "styler::mlr_style@https://github.com/pat-s/styler/tree/mlr-style",
+    style_guide_version = styler_version
   )
 }
 

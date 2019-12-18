@@ -4,11 +4,15 @@
 \alias{mlr_style}
 \title{The mlr style}
 \usage{
-mlr_style(scope = "tokens", strict = TRUE, indent_by = 2,
+mlr_style(
+  scope = "tokens",
+  strict = TRUE,
+  indent_by = 2,
   start_comments_with_one_space = FALSE,
   reindention = tidyverse_reindention(),
   math_token_spacing = tidyverse_math_token_spacing(),
-  min_lines_for_break = 10)
+  min_lines_for_break = 10
+)
 }
 \arguments{
 \item{scope}{The extent of manipulation. Can range from "none" (least
@@ -63,9 +67,11 @@ style_text("call( 1)", style = mlr_style, scope = "spaces")
 style_text("call( 1)", transformers = mlr_style(strict = TRUE))
 }
 \seealso{
-Other obtain transformers: \code{\link{tidyverse_style}}
+Other obtain transformers: 
+\code{\link{tidyverse_style}()}
 
-Other style_guides: \code{\link{tidyverse_style}}
+Other style_guides: 
+\code{\link{tidyverse_style}()}
 }
 \concept{obtain transformers}
 \concept{style_guides}

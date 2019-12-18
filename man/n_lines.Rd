@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{n_lines}
 \alias{n_lines}
-\title{Count the number of line breaks in a parse table}
+\title{Count the number of line breaks in a parse table and all its children}
 \usage{
 n_lines(pd)
 }
