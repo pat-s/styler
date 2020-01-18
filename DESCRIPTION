@@ -1,7 +1,7 @@
-Package: styler
 Type: Package
+Package: styler
 Title: Non-Invasive Pretty Printing of R Code
-Version: 1.1.1.9003
+Version: 1.2.0.9000
 Authors@R: 
     c(person(given = "Kirill",
              family = "Müller",
@@ -30,19 +30,22 @@ Imports:
     xfun (>= 0.1)
 Suggests: 
     data.tree (>= 0.1.6),
+    digest,
     dplyr,
     here,
     knitr,
     prettycode,
+    R.cache (>= 0.14.0),
     rmarkdown,
     rstudioapi (>= 0.7),
     testthat (>= 2.1.0)
-VignetteBuilder: knitr
+VignetteBuilder: 
+    knitr
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE, roclets = c("rd", "namespace",
     "collate", "pkgapi::api_roclet"))
-RoxygenNote: 6.1.1
+RoxygenNote: 7.0.2
 Collate: 
     'addins.R'
     'communicate.R'
@@ -74,14 +77,17 @@ Collate:
     'style-guides-mlr.R'
     'style-guides.R'
     'styler.R'
+    'stylerignore.R'
     'testing-mocks.R'
     'testing-public-api.R'
     'testing.R'
     'token-create.R'
     'transform-code.R'
     'transform-files.R'
-    'ui.R'
+    'ui-caching.R'
+    'ui-styling.R'
     'unindent.R'
+    'utils-cache.R'
     'utils-files.R'
     'utils-navigate-nest.R'
     'utils-strings.R'
