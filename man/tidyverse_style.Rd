@@ -64,9 +64,11 @@ style_text(c("ab <- 3", "a  <-3"), strict = FALSE) # keeps alignment of "<-"
 style_text(c("ab <- 3", "a  <-3"), strict = TRUE) # drops alignment of "<-"
 }
 \seealso{
-Other obtain transformers: \code{\link{mlr_style}}
+Other obtain transformers: 
+\code{\link{mlr_style}()}
 
-Other style_guides: \code{\link{mlr_style}}
+Other style_guides: 
+\code{\link{mlr_style}()}
 }
 \concept{obtain transformers}
 \concept{style_guides}
