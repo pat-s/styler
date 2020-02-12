@@ -33,9 +33,9 @@ convert_newlines_to_linebreaks <- function(text) {
   split <- strsplit(text, "\n", fixed = TRUE)
   map(split, ~ if (identical(.x, character(0))) {
     ""
-    } else {
-      .x
-    }) %>%
+  } else {
+    .x
+  }) %>%
     unlist()
 }
 
@@ -114,5 +114,11 @@ option_read <- function(x, default = NULL, error_if_not_found = TRUE) {
   } else {
     rlang::abort(paste("R option", x, "most be set."))
   }
+}
 
+
+unwhich <- function(x, length) {
+  x_ <- rep(FALSE, length)
+  x_[x] <- TRUE
+  x_
 }

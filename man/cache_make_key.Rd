@@ -6,6 +6,14 @@
 \usage{
 cache_make_key(text, transformers)
 }
+\arguments{
+\item{text}{Code to create a cache for. This should be styled text, as the
+approach used by styler does not cache input, but styled code.}
+
+\item{transformers}{A list of transformer functions, because we can only
+know if text is already correct if we know which transformer function it
+should be styled with.}
+}
 \description{
 This is used to determine if caching already corresponds to a style guide.
 }
@@ -43,8 +51,8 @@ this is fixed, we'd have to work with version 0.2.5.
 \item Our caching backend package, \code{R.cache}, uses
 \code{R.cache:::getChecksum.default} (which uses \code{digest::digest()}) to hash the
 input. The latter does not seem to care if the environments are exactly
-equal (see 'Exampels').
-\item However, under stome circumstances, it does: Commit 9c94c022 (if not
+equal (see 'Examples').
+\item However, under some circumstances, it does: Commit 9c94c022 (if not
 overwritten / rebased by now) contains a reprex. Otherwise, search for
 43219ixmypi in commit messages and restore this commit to reproduce the
 behavior.
@@ -53,7 +61,7 @@ behavior.
 
 \examples{
 add <- function(x, y) {
-x + y
+  x + y
 }
 add1 <- purrr::partial(add, x = 1)
 add2 <- purrr::partial(add, x = 1)

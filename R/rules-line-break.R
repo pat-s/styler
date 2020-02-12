@@ -130,7 +130,7 @@ style_line_break_around_curly <- function(strict, pd) {
 #' sugar according to the above definition. On the other hand `\{\{ x + y \}\}`
 #' is recognized by styler as containing it (and is parsable code)
 #' but will most likely give an error at runtime because the way the syntactic
-#' suggar is defined in rlang is to use a single token within curly-curly. In
+#' sugar is defined in rlang is to use a single token within curly-curly. In
 #' addition, because rlang parses `\{\{` in a special way (just as `!!`), the
 #' expression `\{\{ x \}\}` will give a runtime error when used outside of a
 #' context that is capable of handling it, e.g. on the top level (that is, not
@@ -233,8 +233,8 @@ NULL
 #' @keywords internal
 set_line_break_after_opening_if_call_is_multi_line <-
   function(pd,
-             except_token_after = NULL,
-             except_text_before = NULL) {
+           except_token_after = NULL,
+           except_text_before = NULL) {
     if (!is_function_call(pd) && !is_subset_expr(pd)) {
       return(pd)
     }
@@ -308,19 +308,18 @@ set_linebreak_after_ggplot2_plus <- function(pd) {
     next_non_comment <- next_non_comment(pd, first_plus)
     is_plus_or_comment_after_plus_before_fun_call <-
       lag(is_plus_raw, next_non_comment - first_plus - 1, default = FALSE) &
-      (pd$token_after == "SYMBOL_FUNCTION_CALL" | pd$token_after == "SYMBOL_PACKAGE")
+        (pd$token_after == "SYMBOL_FUNCTION_CALL" | pd$token_after == "SYMBOL_PACKAGE")
     if (any(is_plus_or_comment_after_plus_before_fun_call)) {
       gg_call <- pd$child[[previous_non_comment(pd, first_plus)]]$child[[1]]
       if (!is.null(gg_call) && isTRUE(gg_call$text[gg_call$token == "SYMBOL_FUNCTION_CALL"] == "ggplot")) {
         plus_without_comment_after <- setdiff(
           which(is_plus_raw),
           which(lead(pd$token == "COMMENT"))
-          )
+        )
 
         pd$lag_newlines[plus_without_comment_after + 1] <- 1L
       }
     }
-
   }
   pd
 }

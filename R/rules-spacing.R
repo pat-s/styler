@@ -58,7 +58,7 @@ style_space_around_math_token <- function(strict, zero, one, pd_flat) {
       )
   }
   if (any(pd_flat$token %in% one)) {
-    pd_flat <-  pd_flat %>%
+    pd_flat <- pd_flat %>%
       style_space_around_token(
         strict = strict, tokens = one, level_before = 1L, level_after = 1L
       )
@@ -171,7 +171,7 @@ remove_space_before_opening_paren <- function(pd_flat) {
 }
 
 remove_space_after_opening_paren <- function(pd_flat) {
-  paren_after <- pd_flat$token == "'('"
+  paren_after <- pd_flat$token %in% c("'('", "'['", "LBB")
   if (!any(paren_after)) {
     return(pd_flat)
   }
@@ -180,7 +180,7 @@ remove_space_after_opening_paren <- function(pd_flat) {
 }
 
 remove_space_before_closing_paren <- function(pd_flat) {
-  paren_after <- pd_flat$token == "')'"
+  paren_after <- pd_flat$token %in% c("')'", "']'")
   if (!any(paren_after)) {
     return(pd_flat)
   }
