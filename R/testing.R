@@ -223,6 +223,55 @@ copy_to_tempdir <- function(path_perm = testthat_file()) {
   file.path(dir, base)
 }
 
+#' Times two function calls with temporarily enabled cache
+#'
+#' This can be helpful for benchmarking.
+#' @param ... Arguments passed to `fun`.
+#' @param fun The function that should be timed.
+#' @param n The number of times the experiment should be repeated.
+#' @return
+#' A scalar indicating the relative difference of the second compared to the
+#'   first run.
+#' @keywords internal
+n_times_faster_with_cache <- function(x1, x2 = x1, ...,
+                                fun = styler::style_text,
+                                n = 3,
+                                clear = "always") {
+  rlang::arg_match(clear, c("always", "final", "never", "all but last"))
+  capture.output(
+    out <- purrr::map(1:n, n_times_faster_bench,
+      x1 = x1, x2 = x2, fun = fun,
+      ..., n = n, clear = clear) %>%
+    purrr::map_dbl(
+      ~ unname(.x$first["elapsed"] / .x$second["elapsed"])) %>%
+    mean()
+  )
+  if (clear %in% c("always", "final")) {
+    clear_testthat_cache()
+  }
+  out
+}
+
+
+n_times_faster_bench <- function(i, x1, x2, fun, ..., n, clear) {
+  fresh_testthat_cache()
+  if ((clear == "always") || (clear == "all but last" & n != i)) {
+    on.exit(clear_testthat_cache())
+  }
+  first <- system.time(fun(x1, ...))
+
+  if (is.null(x2)) {
+    second <- c(elapsed = 1)
+  } else {
+    second <- system.time(fun(x2, ...))
+  }
+  list(
+    first = first,
+    second =  second
+  )
+}
+
+
 #' Generate a comprehensive collection test cases for comment / insertion
 #' interaction
 #' Test consist of if / if-else / if-else-if-else cases, paired with various
@@ -263,3 +312,12 @@ generate_test_samples <- function() {
     file = "tests/testthat/insertion_comment_interaction/if_else_if_else-in.R"
   )
 }
+
+#' @include ui-caching.R
+clear_testthat_cache <- purrr::partial(cache_clear, "testthat", ask = FALSE)
+activate_testthat_cache <- purrr::partial(cache_activate, "testthat")
+fresh_testthat_cache <- function() {
+  clear_testthat_cache()
+  activate_testthat_cache()
+}
+

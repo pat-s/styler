@@ -1,3 +1,44 @@
+# styler 1.3.2
+
+Release upon request by the CRAN team.
+
+## Minor changes and fixes
+
+- various fixes to handle special cases for caching and stylerignore and their
+  interaction (#611, #610, #609, #607, #602, #600).
+- also test on macOS (#604).
+- skip timing tests on CRAN as requested by CRAN team because they did not pass 
+  on all machines (#603).
+
+# styler 1.3.1
+
+Emergency release. In case multiple expressions are on one line and only 
+some of them are cached, styler can remove code. To reach this state, 
+some of the expressions must have been styled previously alone and the cache
+must be active. Example:
+
+```
+library(styler)
+cache_activate()
+#> Using cache 1.3.0 at ~/.Rcache/styler/1.3.0.
+style_text("1")
+#> 1
+style_text("1 # comment")
+#> # comment
+```
+
+This is obviously detrimental. We have added additional tests and fixed the 
+problem (#593, #595), but we want repeat the warning from `?style_file` that all 
+style APIs apart from `style_text()` overwrite code and that styler can only 
+check the AST remains valid with `scope < "tokens"`. So use this if you are 
+conservative. Or deactivate the cache with `deactivate_cache()` until it has 
+fully matured.
+
+We thank the people who have contributed to this release:
+
+[&#x0040;ellessenne](https://github.com/ellessenne) and 
+[&#x0040;renkun-ken](https://github.com/renkun-ken).
+
 # styler 1.3.0
 
 ## Breaking changes

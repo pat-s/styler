@@ -60,7 +60,7 @@ cache_find_block <- function(pd) {
 
   first_on_line_idx <- which(!not_first_on_line)
   valid_replacements <- map_int(invalid_turning_point_idx, function(x) {
-    last(which(x > first_on_line_idx))
+    first_on_line_idx[last(which(x > first_on_line_idx))]
   })
   sort(unique(c(
     setdiff(which(first_after_cache_state_switch), invalid_turning_point_idx),
@@ -88,6 +88,7 @@ find_blank_lines_to_next_expr <- function(pd_nested) {
 #' line 1, the first element of the output is the number of lines until the
 #' first block.
 #' @param pd A top level nest.
+#' @keywords internal
 find_blank_lines_to_next_block <- function(pd) {
   block_boundary <- pd$block != lag(pd$block, default = 0)
   find_blank_lines_to_next_expr(pd)[block_boundary]

@@ -1,7 +1,7 @@
 Type: Package
 Package: styler
 Title: Non-Invasive Pretty Printing of R Code
-Version: 1.3.9000
+Version: 1.3.2.9000
 Authors@R: 
     c(person(given = "Kirill",
              family = "Müller",
@@ -80,12 +80,12 @@ Collate:
     'stylerignore.R'
     'testing-mocks.R'
     'testing-public-api.R'
+    'ui-caching.R'
     'testing.R'
     'token-create.R'
     'transform-block.R'
     'transform-code.R'
     'transform-files.R'
-    'ui-caching.R'
     'ui-styling.R'
     'unindent.R'
     'utils-cache.R'
