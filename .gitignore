@@ -11,3 +11,4 @@ R/scratch
 revdep/
 !revdep/*.md
 !revdep/problems.md
+.vscode
