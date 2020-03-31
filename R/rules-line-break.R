@@ -193,7 +193,7 @@ set_line_break_after_fun_dec_header <- function(pd, min_lines_for_break) {
       pd$child[[nrow(pd)]]$token[1] == "'{'"
   ) {
 
-    pos <- next_non_comment(pd, 1)
+    pos <- next_non_comment(pd$child[[nrow(pd)]], 1)
     pd$child[[nrow(pd)]]$lag_newlines[pos] <- ifelse(
       n_lines(pd) > min_lines_for_break,
       2L,
