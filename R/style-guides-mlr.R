@@ -33,6 +33,7 @@ mlr_style <- function(scope = "tokens",
                       reindention = tidyverse_reindention(),
                       math_token_spacing = tidyverse_math_token_spacing(),
                       min_lines_for_break = 10) {
+
   scope <- character_to_ordered(
     scope,
     c("none", "spaces", "indention", "line_breaks", "tokens")
@@ -44,7 +45,7 @@ mlr_style <- function(scope = "tokens",
       indent_op = partial(indent_op, indent_by = indent_by),
       indent_eq_sub = partial(indent_eq_sub, indent_by = indent_by),
       indent_without_paren = partial(indent_without_paren,
-                                     indent_by = indent_by
+        indent_by = indent_by
       ),
       fix_quotes,
       remove_space_before_closing_paren,
@@ -58,13 +59,15 @@ mlr_style <- function(scope = "tokens",
         math_token_spacing$one
       ),
       style_space_around_tilde = partial(
-        style_space_around_tilde, strict = strict
+        style_space_around_tilde,
+        strict = strict
       ),
       spacing_around_op = purrr::partial(
-        set_space_around_op, strict = strict
+        set_space_around_op,
+        strict = strict
       ),
       spacing_around_comma = if (strict) {
-        #set_space_after_comma
+        # set_space_after_comma
         add_space_after_comma
       } else {
         add_space_after_comma
@@ -76,7 +79,7 @@ mlr_style <- function(scope = "tokens",
       remove_space_after_fun_dec,
       remove_space_around_colons,
       start_comments_with_space = partial(start_comments_with_space,
-                                          force_one = start_comments_with_one_space
+        force_one = start_comments_with_one_space
       ),
       remove_space_after_unary_pm_nested,
       spacing_before_comments = if (strict) {
@@ -95,18 +98,28 @@ mlr_style <- function(scope = "tokens",
     lst(
       remove_line_break_before_round_closing_fun_dec =
         if (strict) remove_line_break_before_round_closing_fun_dec,
-      style_line_break_around_curly = partial(style_line_break_around_curly,
-                                              strict
+      style_line_break_around_curly = partial(
+        style_line_break_around_curly,
+        strict
       ),
       remove_line_break_in_empty_fun_call,
       add_line_break_after_pipe,
-      # this breaks }) into separate lines, see https://github.com/r-lib/styler/issues/514#issue-443293104
-      # add_line_break_before_round_closing_after_curly,
+      set_line_break_after_opening_if_call_is_multi_line = if (strict) {
+        partial(
+          set_line_break_after_opening_if_call_is_multi_line,
+          except_token_after = "COMMENT",
+          except_text_before = c("switch", "ifelse", "if_else")
+        )
+      }
+    #   # this breaks }) into separate lines, see https://github.com/r-lib/styler/issues/514#issue-443293104
+    #   # add_line_break_before_round_closing_after_curly,
 
       # should be last because it depends on other line breaks via n_lines()
-      partial(set_line_break_after_fun_dec_header,
-              min_lines_for_break = min_lines_for_break
-      )
+      # partial(set_line_break_after_fun_dec_header,
+      #   min_lines_for_break = min_lines_for_break,
+      #   # FIXME: this is needed to avoid linebreaks for `#nolint`. How to implement?
+      #   except_token_after = "COMMENT"
+      # )
     )
   }
 
@@ -126,15 +139,15 @@ mlr_style <- function(scope = "tokens",
 
   create_style_guide(
     # transformer functions
-    initialize          = default_style_guide_attributes,
-    line_break          = line_break_manipulators,
-    space               = space_manipulators,
-    token               = token_manipulators,
-    indention           = indention_modifier,
+    initialize = default_style_guide_attributes,
+    line_break = line_break_manipulators,
+    space = space_manipulators,
+    token = token_manipulators,
+    indention = indention_modifier,
     # transformer options
-    use_raw_indention   = use_raw_indention,
-    reindention         = reindention,
-    style_guide_name    = "styler::mlr_style@https://github.com/pat-s/styler/tree/mlr-style",
+    use_raw_indention = use_raw_indention,
+    reindention = reindention,
+    style_guide_name = "styler::mlr_style@https://github.com/pat-s/styler/tree/mlr-style",
     style_guide_version = styler_version
   )
 }
