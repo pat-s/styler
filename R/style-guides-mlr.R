@@ -110,16 +110,14 @@ mlr_style <- function(scope = "tokens",
           except_token_after = "COMMENT",
           except_text_before = c("switch", "ifelse", "if_else")
         )
-      }
-    #   # this breaks }) into separate lines, see https://github.com/r-lib/styler/issues/514#issue-443293104
-    #   # add_line_break_before_round_closing_after_curly,
+      },
+      #   # this breaks }) into separate lines, see https://github.com/r-lib/styler/issues/514#issue-443293104
+      #   # add_line_break_before_round_closing_after_curly,
 
       # should be last because it depends on other line breaks via n_lines()
-      # partial(set_line_break_after_fun_dec_header,
-      #   min_lines_for_break = min_lines_for_break,
-      #   # FIXME: this is needed to avoid linebreaks for `#nolint`. How to implement?
-      #   except_token_after = "COMMENT"
-      # )
+      partial(set_line_break_after_fun_dec_header,
+        min_lines_for_break = min_lines_for_break
+      )
     )
   }
 
