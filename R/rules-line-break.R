@@ -90,12 +90,13 @@ set_line_break_before_curly_opening <- function(pd) {
 }
 
 
-set_line_break_around_comma <- function(pd) {
+set_line_break_around_comma <- function(pd, strict) {
   comma_with_line_break_that_can_be_removed_before <-
     (pd$token == "','") &
       (pd$lag_newlines > 0) &
       (pd$token_before != "COMMENT") &
       (lag(pd$token) != "'['")
+
   pd$lag_newlines[comma_with_line_break_that_can_be_removed_before] <- 0L
   pd$lag_newlines[lag(comma_with_line_break_that_can_be_removed_before)] <- 1L
   pd
@@ -179,9 +180,10 @@ add_line_break_before_round_closing_after_curly <- function(pd) {
   pd
 }
 
-remove_line_break_before_round_closing_fun_dec <- function(pd) {
+remove_line_breaks_in_fun_dec <- function(pd) {
   if (is_function_dec(pd)) {
     round_after <- pd$token == "')'" & pd$token_before != "COMMENT"
+    pd$lag_newlines[pd$lag_newlines > 1L] <- 1L
     pd$lag_newlines[round_after] <- 0L
   }
   pd
@@ -206,8 +208,10 @@ set_line_break_after_fun_dec_header <- function(pd, min_lines_for_break) {
 
 #' @importFrom rlang seq2
 add_line_break_after_pipe <- function(pd) {
-  is_pipe <- pd$token == c("SPECIAL-PIPE") & pd$token_after != "COMMENT"
-  if (sum(is_pipe) > 1 &&
+  is_pipe <- pd$token == c("SPECIAL-PIPE")
+  pd$lag_newlines[lag(is_pipe) & pd$lag_newlines > 1] <- 1L
+
+  if (sum(is_pipe & pd$token_after != "COMMENT") > 1 &&
     !(next_terminal(pd, vars = "token_before")$token_before %in% c("'('", "EQ_SUB", "','"))) {
     pd$lag_newlines[lag(is_pipe)] <- 1L
   }
@@ -293,9 +297,15 @@ set_line_break_before_closing_call <- function(pd, except_token_before) {
 
 #' @rdname set_line_break_if_call_is_multi_line
 #' @keywords internal
-remove_line_break_in_empty_fun_call <- function(pd) {
-  if (is_function_call(pd) && nrow(pd) == 3) {
-    pd$lag_newlines[3] <- 0L
+remove_line_break_in_fun_call <- function(pd, strict) {
+  if (is_function_call(pd)) {
+    # no blank lines within function calls
+    if (strict) {
+      pd$lag_newlines[lag(pd$token == "','") & pd$lag_newlines > 1 & pd$token != "COMMENT"] <- 1L
+    }
+    if (nrow(pd) == 3) {
+      pd$lag_newlines[3] <- 0L
+    }
   }
   pd
 }

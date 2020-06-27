@@ -163,7 +163,8 @@ test_that("messages (via cat()) of style_file are correct", {
           testthat_file(paste0(
             "public-api/xyzdir-dirty/dirty-reference-with-scope-tokens-",
             encoding
-          ))
+          )),
+          update = getOption("styler.test_dir_writable", TRUE)
         )
 
         # No message if scope > line_breaks and code does not change
@@ -175,7 +176,8 @@ test_that("messages (via cat()) of style_file are correct", {
           testthat_file(paste0(
             "public-api/xyzdir-dirty/clean-reference-with-scope-tokens-",
             encoding
-          ))
+          )),
+          update = getOption("styler.test_dir_writable", TRUE)
         )
 
         # No message if scope <= line_breaks even if code is changed.
@@ -187,8 +189,23 @@ test_that("messages (via cat()) of style_file are correct", {
           testthat_file(paste0(
             "public-api/xyzdir-dirty/dirty-reference-with-scope-spaces-",
             encoding
-          ))
+          )),
+          update = getOption("styler.test_dir_writable", TRUE)
         )
+      }
+    )
+  }
+})
+
+test_that("Messages can be suppressed", {
+  for (encoding in ls_testable_encodings()) {
+    withr::with_options(
+      list(cli.unicode = encoding == "utf8", styler.quiet = TRUE),
+      {
+        output <- catch_style_file_output(c(
+          "public-api", "xyzdir-dirty", "dirty-sample-with-scope-spaces.R"
+        ), encoding = encoding)
+        expect_equal(output, character(0))
       }
     )
   }
@@ -311,4 +328,24 @@ test_that("styler can style Rnw files only via style_pkg()", {
   expect_false(any(grepl("random.Rmd", msg, fixed = TRUE)))
   expect_true(any(grepl("random.Rnw", msg, fixed = TRUE)))
   expect_false(any(grepl("RcppExports.R", msg, fixed = TRUE)))
+})
+
+test_that("dry run options work:", {
+  path <- test_path("public-api/dry/unstyled.R")
+  # test the testing function
+  expect_error(test_dry(path, style_file, styled = TRUE))
+
+  # real tests
+  ## R
+  test_dry(path, style_file)
+  path <- test_path("public-api/dry/styled.R")
+  test_dry(path, style_file, styled = TRUE)
+
+  ## Rmd
+  test_dry(test_path("public-api/dry/unstyled.Rmd"), style_file, styled = FALSE)
+  test_dry(test_path("public-api/dry/styled.Rmd"), style_file, styled = TRUE)
+
+  ## Rmd
+  test_dry(test_path("public-api/dry/unstyled.Rnw"), style_file, styled = FALSE)
+  test_dry(test_path("public-api/dry/styled.Rnw"), style_file, styled = TRUE)
 })

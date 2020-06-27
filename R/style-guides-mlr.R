@@ -96,8 +96,8 @@ mlr_style <- function(scope = "tokens",
 
   line_break_manipulators <- if (scope >= "line_breaks") {
     lst(
-      remove_line_break_before_round_closing_fun_dec =
-        if (strict) remove_line_break_before_round_closing_fun_dec,
+      remove_line_breaks_in_fun_dec =
+        if (strict) remove_line_breaks_in_fun_dec,
       style_line_break_around_curly = partial(
         style_line_break_around_curly,
         strict

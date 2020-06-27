@@ -13,7 +13,7 @@ NULL
 #'
 #' Style code according to the tidyverse style guide.
 #' @param scope The extent of manipulation. Can range from "none" (least
-#'   invasive) to "token" (most invasive). See 'Details'. This argument is a
+#'   invasive) to "tokens" (most invasive). See 'Details'. This argument is a
 #'   vector of length one.
 #' @param indent_by How many spaces of indention should be inserted after
 #'   operators such as '('.
@@ -57,6 +57,7 @@ tidyverse_style <- function(scope = "tokens",
                             start_comments_with_one_space = FALSE,
                             reindention = tidyverse_reindention(),
                             math_token_spacing = tidyverse_math_token_spacing()) {
+  args <- as.list(environment())
   scope <- character_to_ordered(
     scope,
     c("none", "spaces", "indention", "line_breaks", "tokens")
@@ -117,8 +118,8 @@ tidyverse_style <- function(scope = "tokens",
       set_line_break_before_curly_opening,
       remove_line_break_before_round_closing_after_curly =
         if (strict) remove_line_break_before_round_closing_after_curly,
-      remove_line_break_before_round_closing_fun_dec =
-        if (strict) remove_line_break_before_round_closing_fun_dec,
+      remove_line_breaks_in_fun_dec =
+        if (strict) remove_line_breaks_in_fun_dec,
       style_line_break_around_curly = partial(
         style_line_break_around_curly,
         strict
@@ -139,7 +140,7 @@ tidyverse_style <- function(scope = "tokens",
           except_token_before = "COMMENT"
         )
       },
-      remove_line_break_in_empty_fun_call,
+      purrr::partial(remove_line_break_in_fun_call, strict = strict),
       add_line_break_after_pipe = if (strict) add_line_break_after_pipe,
       set_linebreak_after_ggplot2_plus = if (strict) set_linebreak_after_ggplot2_plus
     )
@@ -175,7 +176,8 @@ tidyverse_style <- function(scope = "tokens",
     use_raw_indention   =              use_raw_indention,
     reindention         =                    reindention,
     style_guide_name    =               style_guide_name,
-    style_guide_version =                 styler_version
+    style_guide_version =                 styler_version,
+    more_specs          =                           args
   )
 }
 
@@ -184,8 +186,12 @@ tidyverse_style <- function(scope = "tokens",
 #' This is a helper function to create a style guide, which is technically
 #' speaking a named list of groups of transformer functions where each
 #' transformer function corresponds to one styling rule. The output of this
-#' function can be used as an argument for \code{style} in top level functions
-#' like [style_text()] and friends.
+#' function can be used as an argument for `style` in top level functions
+#' like [style_text()] and friends. Note that for caching to work properly,
+#' unquote all inputs to the transformer function if possible with rlang's `!!`,
+#' otherwise, they will be passed as references (generic variable names) instead
+#' of literals and `styler:::is_cached()` won't pick up changes. See how it's
+#' done in [tidyverse_style()] with `indent_by` and other arguments.
 #' @param initialize The bare name of a function that initializes various
 #'   variables on each level of nesting.
 #' @param line_break A list of transformer functions that manipulate line_break
@@ -207,6 +213,12 @@ tidyverse_style <- function(scope = "tokens",
 #'   attribute inside the created style guide, for example for caching. This
 #'   should correspond to the version of the R package that exports the
 #'   style guide.
+#' @param more_specs Named vector (coercible to character) specifying arguments
+#'   `args` in `transformer <- list(t1 = purrr::partial(f, arg)` because when
+#'   such functions are converted to characters in [styler::cache_make_key()],
+#'   they will yield generic code and we loose the specific value of `arg` (see
+#'   [styler::cache_make_key()]), even when unquoting these inputs with `!!`
+#'   beforehand in `purrr::partial()`.
 #' @examples
 #' set_line_break_before_curly_opening <- function(pd_flat) {
 #'   op <- pd_flat$token %in% "'{'"
@@ -232,7 +244,8 @@ create_style_guide <- function(initialize = default_style_guide_attributes,
                                use_raw_indention = FALSE,
                                reindention = tidyverse_reindention(),
                                style_guide_name = NULL,
-                               style_guide_version = NULL) {
+                               style_guide_version = NULL,
+                               more_specs = NULL) {
   lst(
     # transformer functions
     initialize = lst(initialize),
@@ -244,7 +257,8 @@ create_style_guide <- function(initialize = default_style_guide_attributes,
     use_raw_indention,
     reindention,
     style_guide_name,
-    style_guide_version
+    style_guide_version,
+    more_specs
   ) %>%
     map(compact)
 }

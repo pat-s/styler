@@ -12,7 +12,8 @@ style_pkg(
   filetype = c("R", "Rprofile"),
   exclude_files = "R/RcppExports.R",
   exclude_dirs = c("packrat", "renv"),
-  include_roxygen_examples = TRUE
+  include_roxygen_examples = TRUE,
+  dry = "off"
 )
 }
 \arguments{
@@ -43,6 +44,12 @@ these directories are anyways not styled.}
 
 \item{include_roxygen_examples}{Whether or not to style code in roxygen
 examples.}
+
+\item{dry}{To indicate whether styler should run in \emph{dry} mode, i.e. refrain
+from writing back to files .\code{"on"} and \code{"fail"} both don't write back, the
+latter returns an error if the input code is not identical to the result
+of styling. "off", the default, writes back if the input and output of
+styling are not identical.}
 }
 \description{
 Performs various substitutions in all \code{.R} files in a package
@@ -53,8 +60,8 @@ Carefully examine the results after running this function!
 \section{Warning}{
 
 This function overwrites files (if styling results in a change of the
-code to be formatted). It is strongly suggested to only style files
-that are under version control or to create a backup copy.
+code to be formatted and \code{dry = "off"}). It is strongly suggested to only
+style files that are under version control or to create a backup copy.
 
 We suggest to first style with \code{scope < "tokens"} and inspect and commit
 changes, because these changes are guaranteed to leave the abstract syntax
@@ -88,7 +95,8 @@ See section 'Warning' for a good strategy to apply styling safely.
 \section{Value}{
 
 Invisibly returns a data frame that indicates for each file considered for
-styling whether or not it was actually changed.
+styling whether or not it was actually changed (or would be changed when
+\code{dry} is not "off").
 }
 
 \examples{
