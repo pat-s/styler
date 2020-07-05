@@ -261,6 +261,14 @@ set_line_break_after_opening_if_call_is_multi_line <-
     pd
   }
 
+#' @rdname set_line_break_if_call_is_multi_line
+#' @keywords internal
+remove_line_break_in_empty_fun_call <- function(pd) {
+  if (is_function_call(pd) && nrow(pd) == 3) {
+    pd$lag_newlines[3] <- 0L
+  }
+  pd
+}
 
 #' Find index of the token before which the line should be broken
 #'

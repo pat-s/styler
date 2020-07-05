@@ -3,6 +3,7 @@
 \name{set_line_break_if_call_is_multi_line}
 \alias{set_line_break_if_call_is_multi_line}
 \alias{set_line_break_after_opening_if_call_is_multi_line}
+\alias{remove_line_break_in_empty_fun_call}
 \alias{set_line_break_before_closing_call}
 \alias{remove_line_break_in_fun_call}
 \title{Set line break for multi-line function calls}
@@ -12,6 +13,8 @@ set_line_break_after_opening_if_call_is_multi_line(
   except_token_after = NULL,
   except_text_before = NULL
 )
+
+remove_line_break_in_empty_fun_call(pd)
 
 set_line_break_before_closing_call(pd, except_token_before)
 
